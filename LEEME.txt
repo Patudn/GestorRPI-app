@@ -1,0 +1,75 @@
+════════════════════════════════════════════════════════
+        GestorRPI — Automatización del Registro de la Propiedad
+        Versión 3.0 · Solo para Mac (Apple Silicon e Intel)
+════════════════════════════════════════════════════════
+
+INSTALACIÓN
+───────────
+1. Descomprimí el archivo GestorRPI_Mac.zip
+2. Dentro vas a encontrar la carpeta GestorRPI_Mac con:
+   - GestorRPI.app  (la aplicación)
+   - browsers/      (Chromium, requerido — no borrar)
+3. Arrastrá GestorRPI.app a tu carpeta Aplicaciones (opcional)
+4. Doble click en GestorRPI.app para abrir
+
+⚠️  Si Mac dice "desarrollador no verificado":
+   → Clic derecho sobre GestorRPI.app → Abrir → Abrir
+
+
+PRIMER USO — CREDENCIALES DEL REGISTRO
+───────────────────────────────────────
+Al abrir la app por primera vez te va a pedir tus credenciales
+del Registro de la Propiedad de Buenos Aires.
+
+Estas son las mismas que usás para ingresar al portal oficial:
+   🌐  https://www.rpba.gov.ar/
+
+Ingresá tu usuario y contraseña del Registro.
+Quedan guardados de forma segura en tu computadora.
+GestorRPI nunca los envía a ningún servidor externo.
+
+⚠️  IMPORTANTE — CRÉDITOS DEL REGISTRO:
+   Para poder realizar búsquedas, tu cuenta del Registro
+   debe tener crédito cargado. Cargá crédito directamente
+   desde el portal oficial: https://www.rpba.gov.ar/
+
+
+INICIO DE SESIÓN EN GESTORRPI
+──────────────────────────────
+Después de ingresar las credenciales del Registro, la app
+te pide tu cuenta de GestorRPI (email y contraseña).
+
+Esta es la cuenta que creaste en gestorrpi.com.ar al suscribirte.
+Es distinta a las credenciales del Registro.
+
+
+USO DIARIO
+──────────
+1. Abrí GestorRPI.app
+2. El navegador se abre en http://localhost:5001
+3. Elegí el formulario que necesitás (Dominio, Inhibición, etc.)
+4. Cargá los datos del trámite
+5. La app navega el portal del Registro por vos automáticamente
+6. El informe queda guardado en:
+   ~/Documents/GestorRPI/informes/
+
+
+DESINSTALACIÓN
+──────────────
+1. Cerrá GestorRPI (desde el ícono en el Dock → Salir)
+2. Arrastrá GestorRPI.app a la Papelera
+3. Para borrar datos guardados:
+   ~/Library/Application Support/GestorRPI/
+
+
+SOPORTE
+───────
+¿Dudas, problemas o sugerencias?
+Telegram: @GestorRPI
+Web:      https://www.gestorrpi.com.ar
+
+Respondemos en menos de 24 horas.
+
+════════════════════════════════════════════════════════
+© 2026 GestorRPI — Todos los derechos reservados
+════════════════════════════════════════════════════════

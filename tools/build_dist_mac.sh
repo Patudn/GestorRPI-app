@@ -42,6 +42,10 @@ cp -r "$DIST_DIR/GestorRPI.app" "$PKG_DIR/"
 echo "→ Copiando Chromium (~340 MB)..."
 cp -r "$CHROMIUM_SRC" "$PKG_DIR/browsers/"
 
+# Copiar LEEME
+echo "→ Copiando LEEME.txt..."
+cp "$SCRIPT_DIR/LEEME.txt" "$PKG_DIR/"
+
 # Crear ZIP
 echo "→ Creando ZIP..."
 cd "$DIST_DIR"

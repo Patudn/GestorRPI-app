@@ -1031,7 +1031,7 @@ async def proceso_playwright(accion, f_desde="", f_hasta="", headless=True):
     try:
         async with async_playwright() as p:
             context = await p.chromium.launch_persistent_context(
-                user_data_dir=os.path.join(BASE_DIR, ".browser_data"),
+                user_data_dir=os.path.join(USER_DATA_DIR, ".browser_data"),
                 headless=headless,
                 accept_downloads=True,
                 downloads_path=DOWNLOAD_PATH,
