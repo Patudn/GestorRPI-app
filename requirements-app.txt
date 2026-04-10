@@ -1,0 +1,8 @@
+flask>=3.0
+flask-cors>=4.0
+playwright==1.58.0
+requests>=2.31
+firebase-admin>=6.4
+platformdirs>=4.0
+pdfplumber>=0.11
+werkzeug>=3.0

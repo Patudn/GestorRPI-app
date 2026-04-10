@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: rpi-webhook
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements-webhook.txt
+    startCommand: gunicorn webhook_server:app
+    envVars:
+      - key: MP_ACCESS_TOKEN
+        sync: false          # lo ponés manualmente en Render
+      - key: MP_WEBHOOK_SECRET
+        sync: false
+      - key: MP_PLAN_MENSUAL_ID
+        sync: false          # 7b40922788a4451fba893dbc69688850
+      - key: MP_PLAN_BIMESTRAL_ID
+        sync: false          # be51a11ae3ca40ff90ff18cadaa396be
+      - key: MP_PLAN_TRIMESTRAL_ID
+        sync: false          # 2ddc7ac2e6504697885fbf8f5a611cda
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false          # JSON del service account de Firebase

@@ -1,0 +1,89 @@
+name: Build GestorRPI for Mac
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión (ej: 3.1.0)'
+        required: false
+        default: '3.0.0'
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-app.txt
+          pip install pyinstaller==6.19.0
+
+      - name: Install Playwright Chromium
+        run: playwright install chromium
+
+      - name: Locate Chromium
+        id: chromium
+        run: |
+          BASE=~/Library/Caches/ms-playwright
+          CHROMIUM_DIR=$(ls -d $BASE/chromium-* 2>/dev/null | head -1)
+          if [ -n "$CHROMIUM_DIR" ]; then
+            echo "path=$CHROMIUM_DIR" >> $GITHUB_OUTPUT
+            echo "name=$(basename $CHROMIUM_DIR)" >> $GITHUB_OUTPUT
+            echo "Chromium: $CHROMIUM_DIR"
+          else
+            echo "Error: Chromium no encontrado en $BASE" && exit 1
+          fi
+
+      - name: Build with PyInstaller
+        run: pyinstaller GestorRPI.spec --noconfirm
+
+      - name: Prepare distribution folder
+        run: |
+          mkdir -p GestorRPI_Mac/browsers
+          cp -r dist/GestorRPI.app GestorRPI_Mac/
+          cp -r "${{ steps.chromium.outputs.path }}" GestorRPI_Mac/browsers/
+          cp dist/GestorRPI_Mac/LEEME.txt GestorRPI_Mac/ 2>/dev/null || true
+
+      - name: Create ZIP
+        run: |
+          cd GestorRPI_Mac && zip -r ../GestorRPI_Mac.zip . && cd ..
+          echo "ZIP: $(du -sh GestorRPI_Mac.zip | cut -f1)"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GestorRPI_Mac
+          path: GestorRPI_Mac.zip
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: GestorRPI_Mac.zip
+          name: GestorRPI ${{ github.ref_name }}
+          body: |
+            ## GestorRPI ${{ github.ref_name }} — Mac
+
+            ### Instalación
+            1. Descargá y descomprimí `GestorRPI_Mac.zip`
+            2. Doble click en `GestorRPI.app`
+            3. Si Mac dice "desarrollador no verificado": clic derecho → Abrir → Abrir
+            4. Se abre el navegador en `localhost:5001`
+
+            ### Soporte
+            Telegram: [@GestorRPI](https://t.me/GestorRPI)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,121 @@
+name: Build GestorRPI for Windows
+
+on:
+  # Lanzar manualmente desde la pestaña "Actions" de GitHub
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión (ej: 3.1.0)'
+        required: false
+        default: '3.0.0'
+
+  # O automáticamente al hacer push de un tag v*
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      # ── 1. Checkout del código ────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Python ─────────────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # ── 3. Dependencias ───────────────────────────────────────────────────
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-app.txt
+          pip install pyinstaller==6.19.0
+
+      # ── 4. Playwright — instalar Chromium ─────────────────────────────────
+      - name: Install Playwright Chromium
+        run: playwright install chromium
+
+      # ── 5. Detectar dónde quedó Chromium ──────────────────────────────────
+      - name: Locate Chromium
+        id: chromium
+        shell: pwsh
+        run: |
+          $base = "$env:LOCALAPPDATA\ms-playwright"
+          $chromiumDir = Get-ChildItem $base -Filter "chromium-*" | Select-Object -First 1
+          if ($chromiumDir) {
+            echo "path=$($chromiumDir.FullName)" >> $env:GITHUB_OUTPUT
+            echo "name=$($chromiumDir.Name)"    >> $env:GITHUB_OUTPUT
+            Write-Host "Chromium encontrado: $($chromiumDir.FullName)"
+          } else {
+            Write-Error "No se encontró Chromium en $base"
+            exit 1
+          }
+
+      # ── 6. PyInstaller — compilar .exe ────────────────────────────────────
+      - name: Build with PyInstaller
+        run: pyinstaller GestorRPI_Win.spec --noconfirm
+
+      # ── 7. Armar carpeta de distribución ──────────────────────────────────
+      - name: Prepare distribution folder
+        shell: pwsh
+        run: |
+          $distName = "GestorRPI_Win"
+          New-Item -ItemType Directory -Force -Path $distName
+
+          # Copiar el exe compilado
+          Copy-Item -Recurse -Force "dist\GestorRPI\*" "$distName\"
+
+          # Copiar Chromium a browsers/
+          $browsersDir = "$distName\browsers"
+          New-Item -ItemType Directory -Force -Path $browsersDir
+          Copy-Item -Recurse -Force "${{ steps.chromium.outputs.path }}" "$browsersDir\"
+
+          # Copiar el LEEME
+          if (Test-Path "dist\GestorRPI_Mac\LEEME.txt") {
+            Copy-Item "dist\GestorRPI_Mac\LEEME.txt" "$distName\"
+          }
+
+          Write-Host "Contenido de $distName :"
+          Get-ChildItem $distName -Recurse | Select-Object FullName | Format-Table
+
+      # ── 8. Comprimir en ZIP ───────────────────────────────────────────────
+      - name: Create ZIP
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "GestorRPI_Win\*" -DestinationPath "GestorRPI_Win.zip" -Force
+          $size = (Get-Item "GestorRPI_Win.zip").length / 1MB
+          Write-Host "ZIP generado: GestorRPI_Win.zip ($([math]::Round($size, 1)) MB)"
+
+      # ── 9. Subir como artefacto de la Action ──────────────────────────────
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GestorRPI_Win
+          path: GestorRPI_Win.zip
+          retention-days: 30
+
+      # ── 10. Crear GitHub Release (solo en tags v*) ─────────────────────────
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: GestorRPI_Win.zip
+          name: GestorRPI ${{ github.ref_name }}
+          body: |
+            ## GestorRPI ${{ github.ref_name }} — Windows
+
+            ### Instalación
+            1. Descargá y descomprimí `GestorRPI_Win.zip`
+            2. Ejecutá `GestorRPI.exe`
+            3. Se abre el navegador en `localhost:5001`
+            4. Ingresá tus credenciales del RPI y tu cuenta GestorRPI
+
+            ### Soporte
+            Telegram: [@GestorRPI](https://t.me/GestorRPI)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

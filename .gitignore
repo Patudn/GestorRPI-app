@@ -1,0 +1,35 @@
+# ── SECRETOS — NUNCA subir a GitHub ──────────────────────────────────────────
+*.json
+!package.json
+rpi-bsas-firebase-adminsdk-*.json
+service_account.json
+.env
+*.env
+
+# ── Python ────────────────────────────────────────────────────────────────────
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ── PyInstaller — builds locales (son grandes, se generan en CI) ──────────────
+build/
+dist/
+*.spec.bak
+
+# ── Datos de usuario ──────────────────────────────────────────────────────────
+informes/
+errores/
+descargados.txt
+session.json
+*.db
+*.sqlite
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+*.swp
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
