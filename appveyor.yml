@@ -1,0 +1,47 @@
+version: 3.0.{build}
+
+image: Visual Studio 2022
+
+platform: x64
+
+environment:
+  PYTHON: "C:\\Python311-x64"
+  PATH: "%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+install:
+  - cmd: python --version
+  - cmd: pip install --upgrade pip
+  - cmd: pip install -r requirements-app.txt
+  - cmd: pip install pyinstaller==6.19.0
+  - cmd: playwright install chromium
+
+build_script:
+  - cmd: pyinstaller GestorRPI_Win.spec --noconfirm
+
+  # Detectar carpeta de Chromium
+  - ps: |
+      $base = "$env:LOCALAPPDATA\ms-playwright"
+      $chromiumDir = Get-ChildItem $base -Filter "chromium-*" | Select-Object -First 1
+      if ($chromiumDir) {
+        $env:CHROMIUM_PATH = $chromiumDir.FullName
+        $env:CHROMIUM_NAME = $chromiumDir.Name
+        Write-Host "Chromium: $($chromiumDir.FullName)"
+      } else {
+        Write-Error "Chromium no encontrado"
+        exit 1
+      }
+
+  # Armar carpeta de distribución
+  - cmd: mkdir GestorRPI_Win
+  - cmd: xcopy /E /I dist\GestorRPI GestorRPI_Win
+  - cmd: mkdir GestorRPI_Win\browsers
+  - ps: Copy-Item -Recurse -Force $env:CHROMIUM_PATH "GestorRPI_Win\browsers\"
+  - cmd: copy LEEME.txt GestorRPI_Win\
+
+  # Comprimir
+  - ps: Compress-Archive -Path "GestorRPI_Win\*" -DestinationPath "GestorRPI_Win.zip" -Force
+  - ps: $size = (Get-Item "GestorRPI_Win.zip").length / 1MB; Write-Host "ZIP $([math]::Round($size,1)) MB"
+
+artifacts:
+  - path: GestorRPI_Win.zip
+    name: GestorRPI_Win
