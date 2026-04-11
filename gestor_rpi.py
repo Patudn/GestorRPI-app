@@ -742,7 +742,7 @@ def form755():
         msg = '<div class="alert alert-ok">✅ Trámite 755 guardado correctamente.</div>'
 
     lista_s = obtener_solicitantes()
-    opts = "".join(f'<option value="{s}">{s}</option>' for s in lista_s)
+    opts = "".join(f'<option value="{s}">' for s in lista_s)
 
     html = CSS_JS + topbar("/form755") + f"""
     <div class="page">
@@ -754,7 +754,8 @@ def form755():
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
                         <input type="text" name="orden" required style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
-                        <select name="solicitante" style="width:200px">{opts}</select></div>
+                        <input type="text" name="solicitante" list="sol-list" style="width:200px" required oninput="mayus(this)">
+                        <datalist id="sol-list">{opts}</datalist></div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del titular</div>
                     <div class="row"><div class="lbl">Apellido <span class="req">*</span></div>
                         <input type="text" name="apellido[]" style="width:240px" required oninput="mayus(this)"></div>
@@ -786,7 +787,7 @@ def form752():
         msg = '<div class="alert alert-ok">✅ Trámite 752 guardado correctamente.</div>'
 
     lista_s = obtener_solicitantes()
-    opts = "".join(f'<option value="{s}">{s}</option>' for s in lista_s)
+    opts = "".join(f'<option value="{s}">' for s in lista_s)
 
     html = CSS_JS + topbar("/form752") + f"""
     <div class="page">
@@ -798,7 +799,8 @@ def form752():
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
                         <input type="text" name="orden" required style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
-                        <select name="solicitante" style="width:200px">{opts}</select></div>
+                        <input type="text" name="solicitante" list="sol-list" style="width:200px" required oninput="mayus(this)">
+                        <datalist id="sol-list">{opts}</datalist></div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del inmueble</div>
                     <div class="row"><div class="lbl">Partido <span class="req">*</span></div>
                         <input type="text" name="partido" style="width:80px" required oninput="soloNum(this)"></div>
@@ -832,7 +834,7 @@ def form754():
         msg = '<div class="alert alert-ok">✅ Trámite 754 guardado correctamente.</div>'
 
     lista_s = obtener_solicitantes()
-    opts = "".join(f'<option value="{s}">{s}</option>' for s in lista_s)
+    opts = "".join(f'<option value="{s}">' for s in lista_s)
 
     html = CSS_JS + topbar("/form754") + f"""
     <div class="page">
@@ -844,7 +846,8 @@ def form754():
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
                         <input type="text" name="orden" required style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
-                        <select name="solicitante" style="width:200px">{opts}</select></div>
+                        <input type="text" name="solicitante" list="sol-list" style="width:200px" required oninput="mayus(this)">
+                        <datalist id="sol-list">{opts}</datalist></div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del inmueble</div>
                     <div class="row"><div class="lbl">Partido <span class="req">*</span></div>
                         <input type="text" name="partido" style="width:80px" required oninput="soloNum(this)"></div>
@@ -874,7 +877,7 @@ def form753ph():
         msg = '<div class="alert alert-ok">✅ Trámite 753 PH guardado correctamente.</div>'
 
     lista_s = obtener_solicitantes()
-    opts = "".join(f'<option value="{s}">{s}</option>' for s in lista_s)
+    opts = "".join(f'<option value="{s}">' for s in lista_s)
 
     html = CSS_JS + topbar("/form753ph") + f"""
     <div class="page">
@@ -886,7 +889,8 @@ def form753ph():
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
                         <input type="text" name="orden" required style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
-                        <select name="solicitante" style="width:200px">{opts}</select></div>
+                        <input type="text" name="solicitante" list="sol-list" style="width:200px" required oninput="mayus(this)">
+                        <datalist id="sol-list">{opts}</datalist></div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del inhibido</div>
                     <div class="row"><div class="lbl">Apellido <span class="req">*</span></div>
                         <input type="text" name="apellido[]" style="width:240px" required oninput="mayus(this)"></div>
@@ -1056,7 +1060,9 @@ async def proceso_playwright(accion, f_desde="", f_hasta="", headless=True):
 
             await context.close()
     except Exception as e:
+        import traceback
         log_proceso(f"❌ Error crítico: {e}")
+        log_proceso(traceback.format_exc())
     finally:
         estado_proceso["corriendo"] = False
 
