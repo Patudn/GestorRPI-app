@@ -9,15 +9,28 @@ import sys
 from pathlib import Path
 
 # ── Rutas clave ───────────────────────────────────────────────────────────────
-venv_site = str(Path(sys.executable).parent.parent / "lib" /
-                f"python{sys.version_info.major}.{sys.version_info.minor}" /
-                "site-packages")
+# Buscar playwright en todas las ubicaciones posibles de site-packages
+import site as _site
+import importlib.util as _ilu
 
-# En el runner de GitHub Actions el venv queda en otra ubicación; usamos site-packages del Python activo
-import site
-venv_site = site.getsitepackages()[0] if site.getsitepackages() else venv_site
+def _find_playwright_pkg():
+    # Método 1: importlib — el más confiable
+    spec = _ilu.find_spec("playwright")
+    if spec and spec.submodule_search_locations:
+        return list(spec.submodule_search_locations)[0]
+    # Método 2: site-packages
+    for sp in _site.getsitepackages():
+        p = os.path.join(sp, "playwright")
+        if os.path.isdir(p):
+            return p
+    # Método 3: junto al ejecutable Python (Windows sin venv)
+    p = os.path.join(os.path.dirname(sys.executable), "Lib", "site-packages", "playwright")
+    if os.path.isdir(p):
+        return p
+    raise RuntimeError("No se encontró el paquete playwright instalado")
 
-PLAYWRIGHT_PKG = os.path.join(venv_site, "playwright")
+PLAYWRIGHT_PKG = _find_playwright_pkg()
+print(f"Playwright encontrado en: {PLAYWRIGHT_PKG}")
 
 # ── Datos a incluir ───────────────────────────────────────────────────────────
 datas = [
