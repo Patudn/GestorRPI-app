@@ -67,7 +67,7 @@ def delete_rpi_credentials():
 
 USUARIO, PASSWORD = load_rpi_credentials()
 
-SOLICITANTES_BASE = ["MILOVAN", "CONGRESO", "MARTIN GARCIA"]
+SOLICITANTES_BASE = []
 
 # Estado global del proceso Playwright
 estado_proceso = {
