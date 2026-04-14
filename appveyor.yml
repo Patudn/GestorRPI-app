@@ -18,24 +18,27 @@ install:
 build_script:
   - cmd: pyinstaller GestorRPI_Win.spec --noconfirm
 
-  # Detectar carpeta de Chromium
+  # Verificar que existen browsers de Playwright
   - ps: |
       $base = "$env:LOCALAPPDATA\ms-playwright"
-      $chromiumDir = Get-ChildItem $base -Filter "chromium-*" | Select-Object -First 1
-      if ($chromiumDir) {
-        $env:CHROMIUM_PATH = $chromiumDir.FullName
-        $env:CHROMIUM_NAME = $chromiumDir.Name
-        Write-Host "Chromium: $($chromiumDir.FullName)"
-      } else {
-        Write-Error "Chromium no encontrado"
+      $dirs = Get-ChildItem $base -Directory
+      if (-not $dirs) {
+        Write-Error "No se encontraron browsers de Playwright en $base"
         exit 1
       }
+      Write-Host "Browsers encontrados:"
+      $dirs | ForEach-Object { Write-Host "  $($_.Name)" }
 
   # Armar carpeta de distribución
   - cmd: mkdir GestorRPI_Win
   - cmd: xcopy /E /I dist\GestorRPI GestorRPI_Win
   - cmd: mkdir GestorRPI_Win\browsers
-  - ps: Copy-Item -Recurse -Force $env:CHROMIUM_PATH "GestorRPI_Win\browsers\"
+  - ps: |
+      $base = "$env:LOCALAPPDATA\ms-playwright"
+      Get-ChildItem $base -Directory | ForEach-Object {
+        Write-Host "Copiando: $($_.Name)"
+        Copy-Item -Recurse -Force $_.FullName "GestorRPI_Win\browsers\"
+      }
   - cmd: copy LEEME.txt GestorRPI_Win\
 
   # Comprimir
