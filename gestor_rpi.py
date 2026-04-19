@@ -862,6 +862,7 @@ def topbar(activo=""):
   </div>
   <a href="/pendientes"   class="''' + ("active" if activo == "/pendientes"   else "") + '''">PEDIDOS</a>
   <a href="/estadisticas" class="''' + ("active" if activo == "/estadisticas" else "") + '''">ESTADÍSTICAS</a>
+  <a href="/productos"   class="''' + ("active" if activo == "/productos"   else "") + '''">PRODUCTOS</a>
   <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
     <a href="/setup"
        style="font-size:.68rem;font-family:var(--mono);letter-spacing:.05em;color:var(--muted);
@@ -2942,6 +2943,207 @@ def borrar_config():
     global USUARIO, PASSWORD
     USUARIO, PASSWORD = None, None
     return redirect("/setup")
+
+
+# =====================================================
+# PRODUCTOS
+# =====================================================
+
+@app.route("/productos")
+def productos():
+    html = CSS_JS + topbar("/productos") + """
+    <style>
+    .prod-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        margin-top: 8px;
+    }
+    .prod-card {
+        background: var(--s1);
+        border: 1px solid var(--b1);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: border-color .2s, box-shadow .2s;
+    }
+    .prod-card:hover {
+        border-color: var(--amber);
+        box-shadow: 0 0 24px rgba(245,158,11,.1);
+    }
+    .prod-card-header {
+        padding: 1rem 1.4rem .8rem;
+        background: var(--s2);
+        border-bottom: 1px solid var(--b1);
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+    .prod-icon {
+        font-size: 1.6rem;
+        line-height: 1;
+    }
+    .prod-name {
+        font-family: var(--mono);
+        font-size: .85rem;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: .06em;
+    }
+    .prod-tag {
+        font-family: var(--mono);
+        font-size: .6rem;
+        color: var(--amber);
+        background: var(--amber-gl);
+        border: 1px solid rgba(245,158,11,.25);
+        border-radius: 4px;
+        padding: 2px 7px;
+        letter-spacing: .08em;
+        margin-left: auto;
+    }
+    .prod-body {
+        padding: 1.2rem 1.4rem;
+    }
+    .prod-desc {
+        font-size: .82rem;
+        color: var(--text2);
+        line-height: 1.65;
+        margin-bottom: 1.2rem;
+    }
+    .prod-features {
+        list-style: none;
+        margin-bottom: 1.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: .45rem;
+    }
+    .prod-features li {
+        font-size: .78rem;
+        color: var(--text2);
+        display: flex;
+        align-items: flex-start;
+        gap: .5rem;
+    }
+    .prod-features li::before {
+        content: "▸";
+        color: var(--amber);
+        font-size: .7rem;
+        margin-top: 1px;
+        flex-shrink: 0;
+    }
+    .prod-footer {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .prod-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .5rem 1.1rem;
+        border-radius: 7px;
+        font-family: var(--mono);
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .05em;
+        text-decoration: none;
+        transition: opacity .15s, transform .1s;
+    }
+    .prod-btn:hover { opacity: .85; transform: translateY(-1px); }
+    .prod-btn-primary {
+        background: var(--amber);
+        color: #07080f;
+    }
+    .prod-btn-ghost {
+        background: transparent;
+        color: var(--amber);
+        border: 1px solid rgba(245,158,11,.35);
+    }
+    .prod-qr {
+        border-radius: 8px;
+        border: 1px solid var(--b1);
+        background: #fff;
+        padding: 4px;
+    }
+    .current-badge {
+        font-family: var(--mono);
+        font-size: .6rem;
+        color: var(--green);
+        background: rgba(34,197,94,.1);
+        border: 1px solid rgba(34,197,94,.25);
+        border-radius: 4px;
+        padding: 2px 7px;
+        letter-spacing: .08em;
+    }
+    </style>
+    <div class="page">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:18px;">
+            // NUESTROS PRODUCTOS
+        </div>
+        <div class="prod-grid">
+
+            <!-- GestorRPI -->
+            <div class="prod-card">
+                <div class="prod-card-header">
+                    <span class="prod-icon">🏛️</span>
+                    <div>
+                        <div class="prod-name">GestorRPI</div>
+                        <div style="font-size:.65rem;color:var(--muted);font-family:var(--mono);margin-top:2px;">Registro de la Propiedad Inmueble · Bs. As.</div>
+                    </div>
+                    <span class="current-badge">ACTIVO</span>
+                </div>
+                <div class="prod-body">
+                    <p class="prod-desc">
+                        Automatizá la carga de trámites en el portal del RPIBA. Ingresás los datos una sola vez y el sistema los presenta automáticamente, con seguimiento de estado y notificaciones de resultado.
+                    </p>
+                    <ul class="prod-features">
+                        <li>Carga automática de índice de titulares, informes y copias de dominio</li>
+                        <li>Seguimiento de pedidos pendientes en tiempo real</li>
+                        <li>Estadísticas y exportación de trámites</li>
+                        <li>Descarga automática de informes completados</li>
+                    </ul>
+                    <div class="prod-footer">
+                        <span style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">Estás usando esta app ahora</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bot Telegram -->
+            <div class="prod-card">
+                <div class="prod-card-header">
+                    <span class="prod-icon">✈️</span>
+                    <div>
+                        <div class="prod-name">SalidasRPI Bot</div>
+                        <div style="font-size:.65rem;color:var(--muted);font-family:var(--mono);margin-top:2px;">@SalidasRPIbot · Telegram</div>
+                    </div>
+                    <span class="prod-tag">TELEGRAM</span>
+                </div>
+                <div class="prod-body">
+                    <p class="prod-desc">
+                        Bot de Telegram para seguimiento de trámites del RPIBA. Cargás tus expedientes y el bot los monitorea automáticamente: te dice cómo están y te avisa en el momento en que salen.
+                    </p>
+                    <ul class="prod-features">
+                        <li>Cargá tus trámites ingresados en mesa de entrada</li>
+                        <li>Consulta de estado en cualquier momento</li>
+                        <li>Notificación automática al detectar salida</li>
+                        <li>Sin instalar nada — funciona directo en Telegram</li>
+                    </ul>
+                    <div class="prod-footer">
+                        <a href="https://t.me/SalidasRPIbot" target="_blank" class="prod-btn prod-btn-primary">
+                            ✈️ Abrir en Telegram
+                        </a>
+                        <img class="prod-qr"
+                             src="https://api.qrserver.com/v1/create-qr-code/?data=https://t.me/SalidasRPIbot&size=80x80&color=07080f&bgcolor=ffffff"
+                             width="80" height="80" alt="QR @SalidasRPIbot">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </body></html>
+    """
+    return html
 
 
 # =====================================================
