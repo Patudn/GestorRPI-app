@@ -155,7 +155,38 @@ REGISTRO_HTML = _BASE_CSS.format(title="Registro") + """
 # ─── SUSCRIPCIÓN ───────────────────────────────────────────────────────────────
 
 SUSCRIPCION_HTML = _BASE_CSS.format(title="Suscripción") + """
-<div class="card" style="max-width:480px;">
+<style>
+body { align-items: flex-start; padding: 40px 16px; }
+.productos-section { width: 100%; max-width: 980px; margin: 32px auto 0; }
+.productos-title { font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); margin-bottom: 16px; }
+.productos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.prod { background: var(--surface); border: 1px solid var(--border); transition: border-color .2s; }
+.prod:hover { border-color: var(--accent2); }
+.prod-head { padding: 12px 18px; background: var(--surface2); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; }
+.prod-head-icon { font-size: 1.3rem; }
+.prod-head-name { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text); }
+.prod-head-sub { font-size: 10px; color: var(--muted); font-family: var(--mono); margin-top: 1px; }
+.prod-badge { margin-left: auto; font-family: var(--mono); font-size: 10px; padding: 2px 7px;
+  letter-spacing: .08em; }
+.badge-active { color: var(--accent3); background: rgba(74,232,154,.1); border: 1px solid var(--accent3); }
+.badge-tg { color: var(--accent2); background: rgba(74,158,232,.1); border: 1px solid var(--accent2); }
+.prod-body { padding: 16px 18px; }
+.prod-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
+.prod-features { list-style: none; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+.prod-features li { font-size: 11px; color: var(--muted); display: flex; gap: 6px; }
+.prod-features li::before { content: "▸"; color: var(--accent); flex-shrink: 0; }
+.prod-actions { display: flex; align-items: center; gap: 12px; }
+.prod-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .05em; text-decoration: none;
+  cursor: pointer; border: none; transition: opacity .15s; }
+.prod-btn:hover { opacity: .8; }
+.prod-btn-tg { background: #2AABEE; color: #fff; }
+.prod-qr { border-radius: 4px; border: 1px solid var(--border); background: #fff; padding: 3px; }
+@media(max-width:600px){ body{ padding:20px 12px; } }
+</style>
+<div class="card" style="max-width:480px;margin:0 auto;">
   <div class="card-header">Suscripción</div>
   <div class="card-body">
     <div class="brand" style="font-size:16px;margin-bottom:4px;">RPI GESTOR</div>
@@ -190,6 +221,72 @@ SUSCRIPCION_HTML = _BASE_CSS.format(title="Suscripción") + """
     </div>
   </div>
 </div>
+
+<!-- Nuestros Productos -->
+<div class="productos-section">
+  <div class="productos-title">// NUESTROS PRODUCTOS</div>
+  <div class="productos-grid">
+
+    <!-- GestorRPI -->
+    <div class="prod">
+      <div class="prod-head">
+        <span class="prod-head-icon">🏛️</span>
+        <div>
+          <div class="prod-head-name">GestorRPI</div>
+          <div class="prod-head-sub">Registro de la Propiedad Inmueble · Bs. As.</div>
+        </div>
+        <span class="prod-badge badge-active">ACTIVO</span>
+      </div>
+      <div class="prod-body">
+        <p class="prod-desc">
+          Automatizá la carga de trámites en el portal del RPIBA. Ingresás los datos una sola vez y el sistema los presenta automáticamente, con seguimiento de estado en tiempo real.
+        </p>
+        <ul class="prod-features">
+          <li>Carga automática de índice de titulares, informes y copias de dominio</li>
+          <li>Seguimiento de pedidos pendientes</li>
+          <li>Estadísticas y exportación de trámites</li>
+          <li>Descarga automática de informes completados</li>
+        </ul>
+        <div class="prod-actions">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">← Estás suscribiéndote ahora</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bot Telegram -->
+    <div class="prod">
+      <div class="prod-head">
+        <span class="prod-head-icon">✈️</span>
+        <div>
+          <div class="prod-head-name">SalidasRPI Bot</div>
+          <div class="prod-head-sub">@SalidasRPIbot · Telegram</div>
+        </div>
+        <span class="prod-badge badge-tg">TELEGRAM</span>
+      </div>
+      <div class="prod-body">
+        <p class="prod-desc">
+          Bot de Telegram para seguimiento de trámites del RPIBA. Cargás tus expedientes y el bot los monitorea automáticamente: te dice cómo están y te avisa en el momento en que salen.
+        </p>
+        <ul class="prod-features">
+          <li>Cargá tus trámites ingresados en mesa de entrada</li>
+          <li>Consulta de estado en cualquier momento</li>
+          <li>Notificación automática al detectar salida</li>
+          <li>Sin instalar nada — funciona directo en Telegram</li>
+        </ul>
+        <div class="prod-actions">
+          <a href="https://t.me/SalidasRPIbot" target="_blank" class="prod-btn prod-btn-tg">
+            ✈️ Abrir en Telegram
+          </a>
+          <img class="prod-qr"
+               src="https://api.qrserver.com/v1/create-qr-code/?data=https://t.me/SalidasRPIbot&size=72x72"
+               width="72" height="72" alt="QR @SalidasRPIbot">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </body></html>
 """
 
