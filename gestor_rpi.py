@@ -201,16 +201,7 @@ def registrar_uso_solicitante(nombre: str):
 
 
 def campo_solicitante():
-    lista_s = obtener_solicitantes()
-    opts = "".join(f'<option value="{s}">{s}</option>' for s in lista_s)
-    opts += '<option value="__OTRO__">★ Otro ★</option>'
-    return (
-        f'<select name="solicitante" style="width:200px" onchange="toggleOtroSolicitante(this)">{opts}</select>'
-        f'<span id="otro-sol-box" style="display:none;margin-left:8px">'
-        f'<input type="text" id="otro-sol-input" placeholder="Escribí el nombre..." '
-        f'style="width:200px" oninput="mayus(this)">'
-        f'</span>'
-    )
+    return '<input type="text" name="solicitante" placeholder="Nombre del solicitante" style="width:200px" oninput="mayus(this)">'
 
 
 def normalizar_texto(texto: str) -> str:
@@ -1248,7 +1239,7 @@ def form755():
                 {msg}
                 <form method="POST" onsubmit="return prepararSolicitante(this) && chkForm755()">
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
-                        <input type="text" name="orden" required style="width:90px" autofocus></div>
+                        <input type="text" name="orden" style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
                         {campo_solicitante()}</div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del titular</div>
@@ -1289,7 +1280,7 @@ def form752():
                 {msg}
                 <form method="POST" onsubmit="return prepararSolicitante(this)">
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
-                        <input type="text" name="orden" required style="width:90px" autofocus></div>
+                        <input type="text" name="orden" style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
                         {campo_solicitante()}</div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del inmueble</div>
@@ -1332,7 +1323,7 @@ def form754():
                 {msg}
                 <form method="POST" onsubmit="return prepararSolicitante(this) && chkForm754()">
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
-                        <input type="text" name="orden" required style="width:90px" autofocus></div>
+                        <input type="text" name="orden" style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
                         {campo_solicitante()}</div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del inmueble</div>
@@ -1371,7 +1362,7 @@ def form753ph():
                 {msg}
                 <form method="POST" onsubmit="return prepararSolicitante(this)">
                     <div class="row"><div class="lbl">N° de Orden <span class="req">*</span></div>
-                        <input type="text" name="orden" required style="width:90px" autofocus></div>
+                        <input type="text" name="orden" style="width:90px" autofocus></div>
                     <div class="row"><div class="lbl">Solicitante <span class="req">*</span></div>
                         {campo_solicitante()}</div>
                     <hr class="sep"><div class="sec-label" style="margin-left:224px">Datos del inhibido</div>
