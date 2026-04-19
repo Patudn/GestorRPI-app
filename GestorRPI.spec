@@ -48,6 +48,7 @@ hidden_imports = [
     "sqlite3",
     "threading",
     "webbrowser",
+    "rumps",
 ]
 
 a = Analysis(

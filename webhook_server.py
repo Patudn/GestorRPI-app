@@ -62,7 +62,7 @@ def get_db():
 def verificar_firma_mp(payload_bytes: bytes, signature_header: str, request_id: str) -> bool:
     """Verifica la firma HMAC-SHA256 de MercadoPago."""
     if not MP_WEBHOOK_SECRET:
-        return True  # Si no hay secreto configurado, dejamos pasar (desarrollo)
+        return False  # Secret no configurado → denegar siempre
     try:
         # MercadoPago firma: "id:{id};request-id:{request_id};ts:{ts};"
         ts = None
@@ -133,6 +133,13 @@ def webhook():
     Recibe notificaciones de MercadoPago sobre suscripciones.
     MercadoPago envía eventos como: authorized, paused, cancelled.
     """
+    # Verificar firma HMAC antes de procesar nada
+    signature_header = request.headers.get("x-signature", "")
+    request_id = request.headers.get("x-request-id", "")
+    if not verificar_firma_mp(request.get_data(), signature_header, request_id):
+        print(f"⛔ Webhook rechazado: firma inválida (x-signature={signature_header!r})")
+        return jsonify({"error": "firma inválida"}), 401
+
     data = request.json or {}
     print(f"📩 Webhook recibido: {data}")
 
@@ -148,7 +155,7 @@ def webhook():
     suscripcion = obtener_datos_suscripcion(preapproval_id)
     if not suscripcion:
         print(f"❌ No se pudo obtener suscripción {preapproval_id}")
-        return jsonify({"error": "no encontrada"}), 404
+        return jsonify({"error": "no encontrada"}), 500  # 500 para que MP reintente
 
     # El external_reference es el Firebase UID del usuario
     uid = suscripcion.get("external_reference")
@@ -162,13 +169,19 @@ def webhook():
     print(f"   uid={uid}, plan_id={plan_id}, estado={estado}")
 
     if estado == "authorized":
-        # Pago aprobado → activar suscripción
         plan_info = PLAN_IDS.get(plan_id, {"nombre": "desconocido", "meses": 1})
-        activar_suscripcion(uid, plan_info["nombre"], plan_info["meses"])
+        try:
+            activar_suscripcion(uid, plan_info["nombre"], plan_info["meses"])
+        except Exception as e:
+            print(f"❌ Error al escribir en Firestore para uid={uid}: {e}")
+            return jsonify({"error": "error interno"}), 500  # MP reintentará
 
     elif estado in ("cancelled", "paused"):
-        # Cancelación o pausa → desactivar
-        desactivar_suscripcion(uid, motivo=estado)
+        try:
+            desactivar_suscripcion(uid, motivo=estado)
+        except Exception as e:
+            print(f"❌ Error al desactivar suscripción uid={uid}: {e}")
+            return jsonify({"error": "error interno"}), 500
 
     return jsonify({"status": "ok"}), 200
 
