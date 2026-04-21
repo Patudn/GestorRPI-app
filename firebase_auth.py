@@ -17,32 +17,50 @@ from datetime import datetime, timezone
 
 
 def _get_proxies() -> dict | None:
-    """Lee configuración de proxy desde config.json si existe."""
+    """
+    Detecta proxy en este orden:
+    1. config.json (configuración manual explícita)
+    2. Proxy del sistema operativo (Windows lo configura IT automáticamente)
+    Si hay credenciales en config.json, las inyecta en la URL del proxy del sistema.
+    """
     try:
         from platformdirs import user_data_dir
         cfg_dir = user_data_dir("GestorRPI", "PatuDN")
     except ImportError:
         cfg_dir = os.path.join(os.path.expanduser("~"), ".gestorrpi")
     cfg_file = os.path.join(cfg_dir, "config.json")
-    if not os.path.exists(cfg_file):
-        return None
+
+    proxy_cfg = {}
     try:
         with open(cfg_file, "r") as f:
-            data = json.load(f)
-        proxy = data.get("proxy", {})
-        url = proxy.get("url", "").strip()
-        if not url:
-            return None
-        usuario = proxy.get("usuario", "").strip()
-        password = proxy.get("password", "").strip()
-        if usuario and password:
-            # Insertar credenciales en la URL: http://user:pass@host:port
-            from urllib.parse import urlparse, urlunparse
-            parsed = urlparse(url)
-            url = urlunparse(parsed._replace(netloc=f"{usuario}:{password}@{parsed.netloc}"))
-        return {"http": url, "https": url}
+            proxy_cfg = json.load(f).get("proxy", {})
     except Exception:
+        pass
+
+    proxy_url = proxy_cfg.get("url", "").strip()
+
+    # Si no hay URL manual, intentar detectar la del sistema
+    if not proxy_url:
+        try:
+            import urllib.request
+            sys_proxies = urllib.request.getproxies()
+            proxy_url = sys_proxies.get("https") or sys_proxies.get("http", "")
+        except Exception:
+            pass
+
+    if not proxy_url:
         return None
+
+    # Inyectar credenciales si están configuradas
+    usuario = proxy_cfg.get("usuario", "").strip()
+    password = proxy_cfg.get("password", "").strip()
+    if usuario and password:
+        from urllib.parse import urlparse, urlunparse
+        parsed = urlparse(proxy_url)
+        if not parsed.username:  # solo si la URL no trae credenciales ya
+            proxy_url = urlunparse(parsed._replace(netloc=f"{usuario}:{password}@{parsed.netloc}"))
+
+    return {"http": proxy_url, "https": proxy_url}
 
 
 def _session() -> requests.Session:
