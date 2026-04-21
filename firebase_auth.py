@@ -15,6 +15,44 @@ import requests
 import time
 from datetime import datetime, timezone
 
+
+def _get_proxies() -> dict | None:
+    """Lee configuración de proxy desde config.json si existe."""
+    try:
+        from platformdirs import user_data_dir
+        cfg_dir = user_data_dir("GestorRPI", "PatuDN")
+    except ImportError:
+        cfg_dir = os.path.join(os.path.expanduser("~"), ".gestorrpi")
+    cfg_file = os.path.join(cfg_dir, "config.json")
+    if not os.path.exists(cfg_file):
+        return None
+    try:
+        with open(cfg_file, "r") as f:
+            data = json.load(f)
+        proxy = data.get("proxy", {})
+        url = proxy.get("url", "").strip()
+        if not url:
+            return None
+        usuario = proxy.get("usuario", "").strip()
+        password = proxy.get("password", "").strip()
+        if usuario and password:
+            # Insertar credenciales en la URL: http://user:pass@host:port
+            from urllib.parse import urlparse, urlunparse
+            parsed = urlparse(url)
+            url = urlunparse(parsed._replace(netloc=f"{usuario}:{password}@{parsed.netloc}"))
+        return {"http": url, "https": url}
+    except Exception:
+        return None
+
+
+def _session() -> requests.Session:
+    """Devuelve una Session con proxy configurado si corresponde."""
+    s = requests.Session()
+    proxies = _get_proxies()
+    if proxies:
+        s.proxies.update(proxies)
+    return s
+
 # ─── Configuración Firebase ────────────────────────────────────────────────────
 FIREBASE_API_KEY    = "AIzaSyDF7W4POQmClkEuwEq8NVmmpQaqKB9495Q"
 FIREBASE_PROJECT_ID = "rpi-bsas"
@@ -64,7 +102,7 @@ def login_with_email_password(email: str, password: str) -> tuple[bool, str | di
     """
     url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
     try:
-        resp = requests.post(url, json={
+        resp = _session().post(url, json={
             "email": email,
             "password": password,
             "returnSecureToken": True
@@ -98,7 +136,7 @@ def login_with_email_password(email: str, password: str) -> tuple[bool, str | di
 def _refresh_id_token(refresh_token: str) -> str | None:
     url = f"https://securetoken.googleapis.com/v1/token?key={FIREBASE_API_KEY}"
     try:
-        resp = requests.post(url, json={
+        resp = _session().post(url, json={
             "grant_type":    "refresh_token",
             "refresh_token": refresh_token
         }, timeout=10)
@@ -147,7 +185,7 @@ def check_subscription(id_token: str, user_id: str) -> bool:
         f"/databases/(default)/documents/subscriptions/{user_id}"
     )
     try:
-        resp = requests.get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
+        resp = _session().get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
     except Exception:
         return False
 
@@ -179,7 +217,7 @@ def get_subscription_info(id_token: str, user_id: str) -> dict:
         f"/databases/(default)/documents/subscriptions/{user_id}"
     )
     try:
-        resp = requests.get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
+        resp = _session().get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
     except Exception:
         return {"active": False, "plan": "-", "expires": "-"}
 

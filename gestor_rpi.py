@@ -61,11 +61,34 @@ def load_rpi_credentials():
     except Exception:
         return None, None
 
-def save_rpi_credentials(usuario: str, password: str):
-    """Guarda credenciales del RPI en config.json."""
+def save_rpi_credentials(usuario: str, password: str, proxy_url: str = "", proxy_usuario: str = "", proxy_password: str = ""):
+    """Guarda credenciales del RPI (y proxy opcional) en config.json."""
     os.makedirs(USER_DATA_DIR, exist_ok=True)
+    data = {"usuario": usuario, "password": password}
+    if proxy_url:
+        data["proxy"] = {"url": proxy_url, "usuario": proxy_usuario, "password": proxy_password}
+    else:
+        # Preservar proxy existente si no se envió nada nuevo
+        try:
+            with open(CONFIG_FILE, "r") as f:
+                existing = json.load(f)
+            if "proxy" in existing:
+                data["proxy"] = existing["proxy"]
+        except Exception:
+            pass
     with open(CONFIG_FILE, "w") as f:
-        json.dump({"usuario": usuario, "password": password}, f)
+        json.dump(data, f)
+
+
+def load_proxy_config() -> dict:
+    """Lee configuración de proxy desde config.json."""
+    if not os.path.exists(CONFIG_FILE):
+        return {}
+    try:
+        with open(CONFIG_FILE, "r") as f:
+            return json.load(f).get("proxy", {})
+    except Exception:
+        return {}
 
 def delete_rpi_credentials():
     """Borra config.json (permite reconfigurar o desinstalar)."""
@@ -2907,6 +2930,27 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);
         <label>Contraseña RPI</label>
         <input type="password" name="password" required placeholder="••••••••">
       </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:20px 0;">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:14px;">
+        PROXY CORPORATIVO (OPCIONAL)
+      </div>
+      <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:14px;line-height:1.6;">
+        Solo completar si tu red requiere proxy para salir a internet (ej: redes bancarias o corporativas).
+      </div>
+      <div class="field">
+        <label>URL del Proxy</label>
+        <input type="text" name="proxy_url" placeholder="http://proxy.empresa.com:8080"
+               value="{proxy_url}" autocomplete="off">
+        <small>Incluí el protocolo y puerto. Dejá vacío si no usás proxy.</small>
+      </div>
+      <div class="field">
+        <label>Usuario del Proxy</label>
+        <input type="text" name="proxy_usuario" placeholder="usuario" value="{proxy_usuario}" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Contraseña del Proxy</label>
+        <input type="password" name="proxy_password" placeholder="••••••••">
+      </div>
       <button class="btn-save" type="submit">Guardar y continuar →</button>
     </form>
   </div>
@@ -2918,21 +2962,30 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);
 def setup():
     error = ""
     usuario_val = ""
+    proxy_cfg = load_proxy_config()
+    proxy_url_val = proxy_cfg.get("url", "")
+    proxy_usuario_val = proxy_cfg.get("usuario", "")
     if request.method == "POST":
-        usuario_val = request.form.get("usuario", "").strip()
-        password_val = request.form.get("password", "")
+        usuario_val     = request.form.get("usuario", "").strip()
+        password_val    = request.form.get("password", "")
+        proxy_url_val   = request.form.get("proxy_url", "").strip()
+        proxy_usuario_val = request.form.get("proxy_usuario", "").strip()
+        proxy_password_val = request.form.get("proxy_password", "")
         if not usuario_val or not password_val:
             error = "Completá usuario y contraseña."
         else:
-            save_rpi_credentials(usuario_val, password_val)
-            # Recargar en memoria
+            save_rpi_credentials(usuario_val, password_val, proxy_url_val, proxy_usuario_val, proxy_password_val)
             global USUARIO, PASSWORD
             USUARIO, PASSWORD = load_rpi_credentials()
             return redirect(url_for("index"))
 
     error_block = f'<div class="error">{error}</div>' if error else ""
     from flask import Response as _Response
-    html = _SETUP_HTML.replace("{error_block}", error_block).replace("{usuario}", usuario_val)
+    html = (_SETUP_HTML
+            .replace("{error_block}", error_block)
+            .replace("{usuario}", usuario_val)
+            .replace("{proxy_url}", proxy_url_val)
+            .replace("{proxy_usuario}", proxy_usuario_val))
     return _Response(html, mimetype="text/html")
 
 
