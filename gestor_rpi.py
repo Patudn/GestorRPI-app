@@ -908,6 +908,15 @@ def topbar(activo=""):
         BORRAR CONFIG
       </button>
     </form>
+    <a href="/logout"
+       onclick="return confirm('¿Cerrar sesión?')"
+       style="font-size:.68rem;font-family:var(--mono);letter-spacing:.05em;color:var(--muted);
+              padding:0 1rem;height:52px;display:flex;align-items:center;
+              border-bottom:2px solid transparent;transition:color .15s;text-decoration:none;"
+       onmouseover="this.style.color='#f87171'"
+       onmouseout="this.style.color=''">
+      SALIR
+    </a>
   </div>
 </div>'''
     return html
