@@ -11,10 +11,10 @@ services:
       - key: MP_WEBHOOK_SECRET
         sync: false
       - key: MP_PLAN_MENSUAL_ID
-        sync: false          # 7b40922788a4451fba893dbc69688850
+        sync: false
       - key: MP_PLAN_BIMESTRAL_ID
-        sync: false          # be51a11ae3ca40ff90ff18cadaa396be
+        sync: false
       - key: MP_PLAN_TRIMESTRAL_ID
-        sync: false          # 2ddc7ac2e6504697885fbf8f5a611cda
+        sync: false
       - key: FIREBASE_SERVICE_ACCOUNT
-        sync: false          # JSON del service account de Firebase
+        sync: false

@@ -33,3 +33,8 @@ session.json
 
 # ── Logs ─────────────────────────────────────────────────────────────────────
 *.log
+
+# ── Herramientas de desarrollo ────────────────────────────────────────────────
+.claude/
+GestorRPI_Mac.zip
+GestorRPI_Win.zip

@@ -4,6 +4,9 @@ image: Visual Studio 2022
 
 platform: x64
 
+# No hay tests — evita que AppVeyor busque resultados de test y falle
+test: off
+
 environment:
   PYTHON: "C:\\Python311-x64"
   PATH: "%PYTHON%;%PYTHON%\\Scripts;%PATH%"

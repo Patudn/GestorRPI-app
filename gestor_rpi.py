@@ -74,10 +74,40 @@ def save_rpi_credentials(usuario: str, password: str, proxy_url: str = "", proxy
                 existing = json.load(f)
             if "proxy" in existing:
                 data["proxy"] = existing["proxy"]
+            # Preservar secret_key existente
+            if "secret_key" in existing:
+                data["secret_key"] = existing["secret_key"]
         except Exception:
             pass
     with open(CONFIG_FILE, "w") as f:
         json.dump(data, f)
+
+
+def _load_or_create_secret_key() -> bytes:
+    """Carga o genera una secret_key persistente desde config.json."""
+    import secrets
+    try:
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, "r") as f:
+                cfg = json.load(f)
+            if "secret_key" in cfg:
+                return bytes.fromhex(cfg["secret_key"])
+    except Exception:
+        pass
+    # Generar nueva clave y guardarla
+    new_key = secrets.token_hex(32)
+    try:
+        cfg = {}
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, "r") as f:
+                cfg = json.load(f)
+        cfg["secret_key"] = new_key
+        os.makedirs(USER_DATA_DIR, exist_ok=True)
+        with open(CONFIG_FILE, "w") as f:
+            json.dump(cfg, f)
+    except Exception:
+        pass
+    return bytes.fromhex(new_key)
 
 
 def load_proxy_config() -> dict:
@@ -109,6 +139,7 @@ estado_proceso = {
     "dialogo_portal": "",
 }
 
+_estado_lock = threading.Lock()
 _confirmacion_event = threading.Event()
 
 # =====================================================
@@ -238,7 +269,8 @@ def normalizar_texto(texto: str) -> str:
 
 
 def log_proceso(msg):
-    estado_proceso["log"].append(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+    with _estado_lock:
+        estado_proceso["log"].append(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
     print(msg)
 
 
@@ -256,7 +288,7 @@ def guardar_log_sesion():
 # FLASK APP
 # =====================================================
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # para flask_session
+app.secret_key = _load_or_create_secret_key()
 
 # ── Registrar rutas de autenticación ──────────────────────────────────────────
 from auth_routes import auth_bp
@@ -287,6 +319,20 @@ def verificar_acceso():
     if request.path not in endpoints_libres:
         if not check_subscription(id_token, sess.get("localId", "")):
             return redirect(url_for("auth.suscripcion"))
+
+    # Calcular días restantes de suscripción para el banner de aviso
+    from firebase_auth import get_subscription_info as _get_sub_info
+    try:
+        sub_info = _get_sub_info(id_token, sess.get("localId", ""))
+        exp_dt = sub_info.get("expires_dt")
+        if exp_dt:
+            from datetime import timezone as _tz
+            dias = (exp_dt - datetime.now(_tz.utc)).days
+            flask_session["sub_dias_restantes"] = dias
+        else:
+            flask_session["sub_dias_restantes"] = None
+    except Exception:
+        flask_session["sub_dias_restantes"] = None
 
     # Si suscripción OK pero no hay credenciales RPI → setup
     if request.path not in endpoints_libres and not os.path.exists(CONFIG_FILE):
@@ -871,7 +917,21 @@ def topbar(activo=""):
     cargar_activo = activo in ("/form755", "/form752", "/form754", "/form753ph")
     cargar_cls = "active" if cargar_activo else ""
 
-    html = '''<div class="topbar">
+    # Banner de vencimiento próximo
+    dias = flask_session.get("sub_dias_restantes")
+    banner = ""
+    if dias is not None and 0 <= dias <= 7:
+        color = "#ef4444" if dias <= 2 else "#f97316"
+        msg   = "¡Suscripción vencida!" if dias == 0 else f"Tu suscripción vence en {dias} día{'s' if dias != 1 else ''}"
+        banner = (
+            f'<div style="background:{color};color:#fff;text-align:center;'
+            f'font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;'
+            f'padding:6px 16px;">'
+            f'{msg} — <a href="/suscripcion" style="color:#fff;text-decoration:underline;">Renovar ahora →</a>'
+            f'</div>'
+        )
+
+    html = banner + '''<div class="topbar">
   <span class="brand">GESTOR·RPI</span>
   <a href="/" class="''' + ("active" if activo == "/" else "") + '''">INICIO</a>
   <div class="tb-dropdown">
@@ -2005,17 +2065,17 @@ def api_buscar_sin_nro():
 @app.route("/iniciar_proceso", methods=["POST"])
 def iniciar_proceso():
     global estado_proceso
-    if estado_proceso["corriendo"]:
-        return jsonify({"ok": False, "error": "Ya hay un proceso en curso"})
-
-    data = request.json
-    accion = data.get("accion")
-    desde  = data.get("desde", "")
-    hasta  = data.get("hasta", "")
-    modo_visible        = data.get("modo_visible", False)
-    confirmacion_manual = data.get("confirmacion_manual", False)
-    estado_proceso = {"corriendo": True, "log": [], "progreso": 0, "total": 0, "fase": "Iniciando...",
-                      "esperando_confirmacion": False, "orden_confirmacion": "", "dialogo_portal": ""}
+    with _estado_lock:
+        if estado_proceso["corriendo"]:
+            return jsonify({"ok": False, "error": "Ya hay un proceso en curso"})
+        data = request.json
+        accion = data.get("accion")
+        desde  = data.get("desde", "")
+        hasta  = data.get("hasta", "")
+        modo_visible        = data.get("modo_visible", False)
+        confirmacion_manual = data.get("confirmacion_manual", False)
+        estado_proceso = {"corriendo": True, "log": [], "progreso": 0, "total": 0, "fase": "Iniciando...",
+                          "esperando_confirmacion": False, "orden_confirmacion": "", "dialogo_portal": ""}
 
     def run():
         asyncio.run(proceso_playwright(
@@ -3212,6 +3272,36 @@ def productos():
 # PUNTO DE ENTRADA
 # =====================================================
 
+def liberar_puerto(port: int):
+    """Mata silenciosamente el proceso que ocupa el puerto, si hay uno."""
+    import socket as _socket
+    import subprocess as _sub
+    # Verificar si el puerto está libre antes de intentar nada
+    with _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM) as s:
+        if s.connect_ex(("127.0.0.1", port)) != 0:
+            return  # ya está libre
+    print(f"⚠️  Puerto {port} ocupado — cerrando sesión anterior...")
+    try:
+        if sys.platform == "win32":
+            result = _sub.run(["netstat", "-ano"], capture_output=True, text=True, timeout=5)
+            for line in result.stdout.splitlines():
+                if f":{port}" in line and "LISTENING" in line:
+                    parts = line.strip().split()
+                    pid = int(parts[-1])
+                    if pid > 0:
+                        _sub.run(["taskkill", "/F", "/PID", str(pid)], capture_output=True, timeout=5)
+                    break
+        else:
+            result = _sub.run(["lsof", "-ti", f"tcp:{port}"], capture_output=True, text=True, timeout=5)
+            for pid_str in result.stdout.strip().splitlines():
+                if pid_str.strip():
+                    os.kill(int(pid_str.strip()), 9)
+    except Exception as e:
+        print(f"No se pudo liberar el puerto {port}: {e}")
+    import time as _time
+    _time.sleep(0.8)
+
+
 def run_flask():
     import logging
     log = logging.getLogger('werkzeug')
@@ -3219,6 +3309,7 @@ def run_flask():
     app.run(port=5001, debug=False, use_reloader=False)
 
 if __name__ == "__main__":
+    liberar_puerto(5001)
     init_db()
 
     usuario_cfg, _ = load_rpi_credentials()

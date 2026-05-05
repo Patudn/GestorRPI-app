@@ -26,57 +26,58 @@ _BASE_CSS = """
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Gestor RPI — {title}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{{
-  --bg:#0f0f11;--surface:#17171a;--surface2:#1e1e23;--surface3:#25252c;
-  --border:#2a2a35;--border2:#35353f;
-  --accent:#e8c84a;--accent2:#4a9ee8;--accent3:#4ae89a;
-  --danger:#e84a4a;--warn:#e8a44a;
-  --text:#e8e8f0;--text2:#a0a0b8;--muted:#5a5a72;
-  --mono:"DM Mono",monospace;--sans:"DM Sans",sans-serif;
+  --bg:#07080f;--surface:#0d0f1a;--surface2:#111525;--surface3:#161c2e;
+  --border:#1e2740;--border2:#252f4a;
+  --accent:#f59e0b;--accent2:#3b82f6;--accent3:#22c55e;
+  --danger:#ef4444;--warn:#f97316;
+  --text:#e8edf8;--text2:#8a9bbf;--muted:#3a4a6b;
+  --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',system-ui,sans-serif;
 }}
 *{{box-sizing:border-box;margin:0;padding:0;}}
 body{{font-family:var(--sans);background:var(--bg);color:var(--text);
       min-height:100vh;display:flex;align-items:center;justify-content:center;}}
-.card{{background:var(--surface);border:1px solid var(--border);width:100%;max-width:420px;}}
-.card-header{{padding:16px 22px;font-family:var(--mono);font-size:11px;
+.card{{background:var(--surface);border:1px solid var(--border);width:100%;max-width:420px;border-radius:10px;overflow:hidden;}}
+.card-header{{padding:14px 22px;font-family:var(--mono);font-size:11px;
               letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;
               border-bottom:1px solid var(--border);background:var(--surface2);
               display:flex;align-items:center;gap:8px;}}
 .card-header::before{{content:"//";color:var(--accent);}}
 .card-body{{padding:28px 28px 24px;}}
-.brand{{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);
+.brand{{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--accent);
         letter-spacing:3px;text-align:center;margin-bottom:6px;}}
 .subtitle{{font-size:12px;color:var(--muted);text-align:center;margin-bottom:28px;font-family:var(--mono);}}
 .field{{margin-bottom:16px;}}
 .field label{{display:block;font-size:11px;font-family:var(--mono);color:var(--text2);
               letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}}
-.field input{{width:100%;padding:10px 12px;border:1px solid var(--border2);
-              background:var(--surface2);color:var(--text);font-size:14px;
-              font-family:var(--sans);outline:none;transition:border-color .15s;}}
-.field input:focus{{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(74,158,232,.1);}}
-.btn-login{{width:100%;padding:12px;background:var(--accent2);border:none;
+.field input{{width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:7px;
+              background:var(--surface3);color:var(--text);font-size:14px;
+              font-family:var(--sans);outline:none;transition:border-color .15s,box-shadow .15s;}}
+.field input:focus{{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(59,130,246,.1);}}
+.btn-login{{width:100%;padding:12px;background:var(--accent2);border:none;border-radius:7px;
             color:white;font-size:13px;font-family:var(--mono);letter-spacing:1px;
             cursor:pointer;transition:background .15s;margin-top:8px;}}
-.btn-login:hover{{background:#3a8ed8;}}
-.error{{background:rgba(232,74,74,.1);border:1px solid var(--danger);
+.btn-login:hover{{background:#2563eb;}}
+.error{{background:rgba(239,68,68,.1);border:1px solid var(--danger);border-radius:6px;
         color:var(--danger);padding:10px 14px;font-size:12px;
         font-family:var(--mono);margin-bottom:16px;}}
-.info{{background:rgba(74,158,232,.1);border:1px solid var(--accent2);
+.info{{background:rgba(59,130,246,.1);border:1px solid var(--accent2);border-radius:6px;
        color:var(--accent2);padding:10px 14px;font-size:12px;
        font-family:var(--mono);margin-bottom:16px;}}
-.ok{{background:rgba(74,232,154,.1);border:1px solid var(--accent3);
+.ok{{background:rgba(34,197,94,.1);border:1px solid var(--accent3);border-radius:6px;
      color:var(--accent3);padding:10px 14px;font-size:12px;
      font-family:var(--mono);margin-bottom:16px;}}
 .sep{{border:none;border-top:1px solid var(--border);margin:20px 0;}}
-.plan-card{{border:1px solid var(--border2);padding:18px;margin-bottom:14px;cursor:pointer;transition:border-color .15s;}}
-.plan-card:hover,.plan-card.selected{{border-color:var(--accent2);background:rgba(74,158,232,.05);}}
+.plan-card{{border:1px solid var(--border2);border-radius:8px;padding:18px;margin-bottom:14px;cursor:pointer;transition:border-color .15s,background .15s;}}
+.plan-card:hover,.plan-card.selected{{border-color:var(--accent2);background:rgba(59,130,246,.05);}}
 .plan-name{{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);}}
 .plan-price{{font-size:22px;font-weight:600;color:var(--accent);margin:4px 0;}}
 .plan-desc{{font-size:12px;color:var(--muted);}}
-.tag{{display:inline-block;padding:2px 8px;font-size:10px;font-family:var(--mono);
-      background:rgba(74,232,154,.15);color:var(--accent3);border:1px solid var(--accent3);
+.tag{{display:inline-block;padding:2px 8px;font-size:10px;font-family:var(--mono);border-radius:4px;
+      background:rgba(34,197,94,.15);color:var(--accent3);border:1px solid var(--accent3);
       margin-left:8px;vertical-align:middle;}}
 .status-row{{display:flex;justify-content:space-between;align-items:center;
              padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}}
@@ -294,8 +295,14 @@ PAYMENT_BLOCK_ACTIVE = """
 <div class="ok">✅ Tu suscripción está activa. Podés usar el sistema normalmente.</div>
 <a href="/" style="display:block;width:100%;padding:12px;background:var(--surface2);
    border:1px solid var(--border2);color:var(--text);font-family:var(--mono);
-   font-size:12px;text-align:center;text-decoration:none;letter-spacing:1px;">
+   font-size:12px;text-align:center;text-decoration:none;letter-spacing:1px;margin-bottom:10px;">
    ← Volver al gestor
+</a>
+<a href="https://www.mercadopago.com.ar/subscriptions" target="_blank"
+   style="display:block;width:100%;padding:10px;background:transparent;
+   border:1px solid var(--border);color:var(--text2);font-family:var(--mono);
+   font-size:11px;text-align:center;text-decoration:none;letter-spacing:1px;">
+   Gestionar o cancelar suscripción en MercadoPago →
 </a>
 """
 
@@ -373,7 +380,7 @@ async function pagar() {
 
 import requests as _req
 import os as _os
-FIREBASE_API_KEY   = "AIzaSyDF7W4POQmClkEuwEq8NVmmpQaqKB9495Q"
+from firebase_auth import FIREBASE_API_KEY
 WEBHOOK_SERVER_URL = "https://rpi-webhook.onrender.com"
 
 def _register_user(email, password):

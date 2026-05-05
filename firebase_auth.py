@@ -188,71 +188,94 @@ def get_valid_token() -> tuple[str | None, dict | None]:
 
 # ─── Suscripción ───────────────────────────────────────────────────────────────
 
+# Caché en memoria: {user_id: (resultado_bool, timestamp_unix, expires_at_dt | None)}
+_sub_cache: dict[str, tuple[bool, float, "datetime | None"]] = {}
+_SUB_CACHE_TTL = 300  # 5 minutos
+
+
+def _fetch_subscription_fields(id_token: str, user_id: str) -> dict | None:
+    """Consulta Firestore y devuelve fields del documento, o None si falla."""
+    url = (
+        f"https://firestore.googleapis.com/v1/projects/{FIREBASE_PROJECT_ID}"
+        f"/databases/(default)/documents/subscriptions/{user_id}"
+    )
+    try:
+        resp = _session().get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
+    except Exception:
+        return None
+    if resp.status_code != 200:
+        return None
+    return resp.json().get("fields", {})
+
+
+def _parse_expires(fields: dict) -> "datetime | None":
+    expires_raw = fields.get("expires_at", {}).get("timestampValue", "")
+    if not expires_raw:
+        return None
+    try:
+        return datetime.fromisoformat(expires_raw.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
 def check_subscription(id_token: str, user_id: str) -> bool:
     """
     Verifica en Firestore si el usuario tiene suscripción activa y vigente.
     Cuentas en CREATOR_EMAILS tienen acceso permanente sin suscripción.
+    Resultado cacheado 5 minutos para evitar un request a Firestore por cada clic.
     """
-    # Bypass para cuentas del creador
     session = load_session()
     if session and session.get("email", "").lower() in {e.lower() for e in CREATOR_EMAILS}:
         return True
 
-    url = (
-        f"https://firestore.googleapis.com/v1/projects/{FIREBASE_PROJECT_ID}"
-        f"/databases/(default)/documents/subscriptions/{user_id}"
-    )
-    try:
-        resp = _session().get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
-    except Exception:
+    now = time.time()
+    cached = _sub_cache.get(user_id)
+    if cached:
+        result, ts, exp_dt = cached
+        # El caché es válido si no expiró su TTL Y la suscripción aún no venció
+        if now - ts < _SUB_CACHE_TTL:
+            if exp_dt is None or exp_dt > datetime.now(timezone.utc):
+                return result
+
+    fields = _fetch_subscription_fields(id_token, user_id)
+    if fields is None:
+        # Si no podemos conectar, usamos el caché aunque sea viejo antes de bloquear
+        if cached:
+            return cached[0]
         return False
 
-    if resp.status_code != 200:
-        return False
-
-    fields = resp.json().get("fields", {})
     active = fields.get("active", {}).get("booleanValue", False)
+    exp_dt = _parse_expires(fields)
+
     if not active:
+        _sub_cache[user_id] = (False, now, exp_dt)
         return False
 
-    expires_raw = fields.get("expires_at", {}).get("timestampValue", "")
-    if expires_raw:
-        try:
-            exp = datetime.fromisoformat(expires_raw.replace("Z", "+00:00"))
-            return exp > datetime.now(timezone.utc)
-        except Exception:
-            return False
+    if exp_dt and exp_dt <= datetime.now(timezone.utc):
+        _sub_cache[user_id] = (False, now, exp_dt)
+        return False
 
-    return True  # Si no tiene fecha de vencimiento, se considera activa
+    _sub_cache[user_id] = (True, now, exp_dt)
+    return True
+
+
+def invalidate_subscription_cache(user_id: str):
+    """Fuerza re-consulta en la próxima llamada a check_subscription."""
+    _sub_cache.pop(user_id, None)
 
 
 def get_subscription_info(id_token: str, user_id: str) -> dict:
-    """
-    Devuelve info completa de la suscripción para mostrar en el panel.
-    """
-    url = (
-        f"https://firestore.googleapis.com/v1/projects/{FIREBASE_PROJECT_ID}"
-        f"/databases/(default)/documents/subscriptions/{user_id}"
-    )
-    try:
-        resp = _session().get(url, headers={"Authorization": f"Bearer {id_token}"}, timeout=10)
-    except Exception:
-        return {"active": False, "plan": "-", "expires": "-"}
+    """Devuelve info completa de la suscripción para mostrar en el panel."""
+    fields = _fetch_subscription_fields(id_token, user_id)
+    if fields is None:
+        return {"active": False, "plan": "-", "expires": "-", "expires_dt": None}
 
-    if resp.status_code != 200:
-        return {"active": False, "plan": "-", "expires": "-"}
-
-    fields = resp.json().get("fields", {})
     active  = fields.get("active", {}).get("booleanValue", False)
     plan    = fields.get("plan", {}).get("stringValue", "mensual")
-    expires = fields.get("expires_at", {}).get("timestampValue", "")
+    exp_dt  = _parse_expires(fields)
 
     expires_str = "-"
-    if expires:
-        try:
-            exp = datetime.fromisoformat(expires.replace("Z", "+00:00"))
-            expires_str = exp.strftime("%d/%m/%Y")
-        except Exception:
-            pass
+    if exp_dt:
+        expires_str = exp_dt.strftime("%d/%m/%Y")
 
-    return {"active": active, "plan": plan, "expires": expires_str}
+    return {"active": active, "plan": plan, "expires": expires_str, "expires_dt": exp_dt}

@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P74R6ZSR');</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GestorRPI â AutomatizÃ¡ el Registro de la Propiedad de Buenos Aires</title>
+<meta name="description" content="GestorRPI automatiza tus bÃºsquedas en el Registro de la Propiedad Inmueble de la Provincia de Buenos Aires. 10x mÃ¡s rÃ¡pido, sin errores."/>
+<link rel="canonical" href="https://www.gestorrpi.com.ar/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.gestorrpi.com.ar/"/>
+<meta property="og:title" content="GestorRPI â AutomatizÃ¡ el Registro de la Propiedad"/>
+<meta property="og:description" content="BÃºsquedas en el RPI de Buenos Aires 10x mÃ¡s rÃ¡pido. Sin errores, sin esperas."/>
+<meta property="og:image" content="https://www.gestorrpi.com.ar/og-image.png"/>
+<meta property="og:locale" content="es_AR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"GestorRPI","url":"https://www.gestorrpi.com.ar","description":"AutomatizaciÃ³n de bÃºsquedas en el Registro de la Propiedad Inmueble de la Provincia de Buenos Aires","applicationCategory":"BusinessApplication","operatingSystem":"macOS, Windows"}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#07080f;
+  --dark:#0d0f1a;
+  --dark2:#111525;
+  --dark3:#161c2e;
+  --border:#1e2740;
+  --border2:#252f4a;
+  --text:#e8edf8;
+  --muted:#5a6e94;
+  --muted2:#8a9bbf;
+  --amber:#f59e0b;
+  --amber-d:#d97706;
+  --amber-dd:#b45309;
+  --amber-glow:rgba(245,158,11,0.18);
+  --amber-bg:rgba(245,158,11,0.08);
+  --red:#ef4444;
+  --green:#22c55e;
+  --surface:#f4f6fc;
+  --surface2:#eceef8;
+  --ink:#0d0f1a;
+  --ink2:#3d4a6b;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+  --font:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font);color:var(--ink);background:var(--black);line-height:1.65;font-size:16px;}
+a{text-decoration:none;}
+img{max-width:100%;}
+
+/* ââ NAV ââââââââââââââââââââââââââââââââââââââââââââââââ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;
+  background:rgba(7,8,15,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  transition:height .3s var(--ease),box-shadow .3s;
+}
+nav.scrolled{height:56px;box-shadow:0 4px 30px rgba(0,0,0,0.4);}
+.logo{font-size:1.35rem;font-weight:700;letter-spacing:-0.03em;color:#fff;}
+.logo span{color:var(--amber);}
+nav ul{list-style:none;display:flex;gap:2rem;align-items:center;}
+nav ul a{font-size:.9rem;font-weight:500;color:rgba(255,255,255,.5);transition:color .2s;}
+nav ul a:hover{color:#fff;}
+.nav-cta{
+  background:var(--amber)!important;color:var(--black)!important;
+  padding:.45rem 1.1rem;border-radius:7px;font-weight:700!important;font-size:.88rem!important;
+  transition:background .2s,transform .15s!important;
+}
+.nav-cta:hover{background:var(--amber-d)!important;transform:translateY(-1px);}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:6px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.6);border-radius:2px;transition:.3s;}
+.nav-mobile{display:none;position:fixed;top:64px;left:0;right:0;background:var(--black);border-bottom:1px solid var(--border);padding:1.2rem 2rem;z-index:199;flex-direction:column;gap:.8rem;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{color:rgba(255,255,255,.65);font-weight:500;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.nav-mobile .nav-cta{text-align:center;background:var(--amber);color:var(--black);padding:.75rem;border-radius:8px;border-bottom:none;margin-top:.3rem;}
+
+/* ââ BANNER ââââââââââââââââââââââââââââââââââââââââââââ */
+.banner{
+  position:fixed;top:64px;left:0;right:0;z-index:199;
+  background:rgba(7,8,15,0.92);
+  border-bottom:1px solid rgba(245,158,11,.2);
+  padding:.6rem 2rem;text-align:center;
+  font-size:.82rem;color:rgba(255,255,255,.55);
+  transition:top .3s;
+}
+.banner .tag{
+  background:var(--amber);color:var(--black);
+  font-size:.7rem;font-weight:800;letter-spacing:.06em;
+  padding:.15rem .55rem;border-radius:4px;margin-right:.5rem;
+}
+body{padding-top:64px;}
+
+/* ââ HERO âââââââââââââââââââââââââââââââââââââââââââââââ */
+.hero{
+  min-height:calc(100vh - 64px);
+  background:var(--black);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;
+  align-items:center;
+  padding:5rem 4rem 4rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 50%,rgba(245,158,11,.09) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 50% at 85% 20%,rgba(239,68,68,.05) 0%,transparent 60%);
+  pointer-events:none;
+}
+/* grid de fondo */
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:56px 56px;
+  pointer-events:none;mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,black,transparent);
+}
+.hero-left{position:relative;z-index:1;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);
+  color:var(--amber);padding:.3rem .9rem;border-radius:50px;
+  font-size:.75rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  margin-bottom:1.8rem;
+}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--amber);border-radius:50%;animation:blink 1.8s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero h1{
+  font-size:clamp(2.4rem,3.8vw,3.5rem);font-weight:700;
+  color:#fff;line-height:1.1;letter-spacing:-.04em;
+  margin-bottom:1.4rem;text-wrap:pretty;
+}
+.hero h1 em{font-style:normal;color:var(--amber);}
+.hero-sub{
+  font-size:1.05rem;color:rgba(255,255,255,.55);
+  max-width:460px;margin-bottom:2.5rem;line-height:1.7;font-weight:400;
+}
+.hero-sub strong{color:rgba(255,255,255,.85);font-weight:600;}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:3rem;}
+.btn-primary{
+  background:var(--amber);color:var(--black);
+  padding:.85rem 1.8rem;border-radius:9px;
+  font-size:.98rem;font-weight:700;
+  box-shadow:0 4px 28px var(--amber-glow);
+  transition:all .2s;display:inline-block;
+}
+.btn-primary:hover{background:var(--amber-d);transform:translateY(-2px);box-shadow:0 8px 36px rgba(245,158,11,.3);}
+.btn-ghost{
+  background:transparent;color:rgba(255,255,255,.7);
+  padding:.85rem 1.8rem;border-radius:9px;
+  font-size:.98rem;font-weight:500;
+  border:1.5px solid rgba(255,255,255,.15);
+  transition:all .2s;display:inline-block;
+}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px);}
+.hero-stats{
+  display:flex;gap:2.5rem;
+  padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);
+  flex-wrap:wrap;
+}
+.hero-stat .num{
+  font-size:2rem;font-weight:700;color:#fff;
+  font-family:var(--font);letter-spacing:-.04em;
+  display:block;
+}
+.hero-stat .num span{color:var(--amber);}
+.hero-stat .lbl{font-size:.78rem;color:var(--muted);margin-top:.1rem;display:block;}
+
+/* ââ APP MOCKUP âââââââââââââââââââââââââââââââââââââââ */
+.hero-right{position:relative;z-index:1;}
+.app-window{
+  background:var(--dark2);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04);
+}
+.app-titlebar{
+  height:40px;background:var(--dark3);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1rem;gap:.8rem;
+}
+.app-dots{display:flex;gap:6px;}
+.app-dot{width:12px;height:12px;border-radius:50%;}
+.dot-r{background:#ff5f57;}.dot-y{background:#febc2e;}.dot-g{background:#28c840;}
+.app-title{
+  flex:1;text-align:center;font-size:.75rem;color:rgba(255,255,255,.3);
+  font-family:var(--mono);letter-spacing:.02em;
+}
+.app-body{padding:1.2rem;}
+/* toolbar */
+.app-toolbar{
+  display:flex;align-items:center;gap:.6rem;
+  margin-bottom:1rem;
+  padding-bottom:1rem;
+  border-bottom:1px solid var(--border);
+}
+.app-toolbar-title{font-size:.82rem;font-weight:600;color:var(--text);flex:1;}
+.status-pill{
+  display:flex;align-items:center;gap:.4rem;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);
+  color:#4ade80;font-size:.7rem;font-weight:700;
+  padding:.3rem .7rem;border-radius:50px;font-family:var(--mono);
+}
+.status-pill::before{content:'';width:5px;height:5px;background:#4ade80;border-radius:50%;animation:blink 1.2s infinite;}
+/* progress bar */
+.progress-wrap{margin-bottom:1rem;}
+.progress-header{display:flex;justify-content:space-between;margin-bottom:.4rem;}
+.progress-label{font-size:.73rem;color:var(--muted2);}
+.progress-val{font-size:.73rem;color:var(--amber);font-family:var(--mono);font-weight:600;}
+.progress-bar{height:6px;background:var(--border);border-radius:50px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--amber-d),var(--amber));width:0%;transition:width 1.4s var(--ease);}
+/* table */
+.app-table{width:100%;border-collapse:collapse;}
+.app-table th{
+  font-size:.68rem;font-weight:600;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.07em;padding:.45rem .7rem;text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.app-table td{
+  font-size:.78rem;color:var(--text);padding:.5rem .7rem;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  font-family:var(--mono);
+}
+.app-table tr:last-child td{border-bottom:none;}
+.badge-ok{color:#4ade80;font-size:.68rem;font-weight:700;font-family:var(--font);}
+.badge-wait{color:var(--amber);font-size:.68rem;font-weight:700;font-family:var(--font);}
+.badge-proc{
+  color:var(--dark);font-size:.63rem;font-weight:800;font-family:var(--font);
+  background:var(--amber);padding:.15rem .45rem;border-radius:4px;animation:blink 1s infinite;
+}
+/* summary row */
+.app-summary{
+  margin-top:.8rem;padding:.8rem 1rem;
+  background:var(--dark3);border-radius:8px;
+  display:flex;align-items:center;gap:1.2rem;
+  border:1px solid var(--border);
+}
+.app-summary-stat{text-align:center;}
+.app-summary-stat .s-num{font-size:1.1rem;font-weight:700;color:var(--amber);font-family:var(--mono);}
+.app-summary-stat .s-lbl{font-size:.62rem;color:var(--muted);margin-top:1px;}
+.app-summary-divider{width:1px;height:28px;background:var(--border);}
+
+/* ââ TICKER ââââââââââââââââââââââââââââââââââââââââââââ */
+.ticker-wrap{
+  background:rgba(245,158,11,.06);
+  border-top:1px solid rgba(245,158,11,.15);
+  border-bottom:1px solid rgba(245,158,11,.15);
+  overflow:hidden;padding:.65rem 0;
+}
+.ticker-track{
+  display:flex;gap:0;
+  animation:ticker 28s linear infinite;
+  width:max-content;
+}
+.ticker-track:hover{animation-play-state:paused;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ticker-item{
+  display:flex;align-items:center;gap:.5rem;
+  padding:0 2.5rem;white-space:nowrap;
+  font-size:.8rem;font-weight:500;color:rgba(255,255,255,.5);
+}
+.ticker-item::before{content:'';width:5px;height:5px;background:var(--amber);border-radius:50%;flex-shrink:0;}
+.ticker-item strong{color:rgba(255,255,255,.8);}
+
+/* ââ SECTIONS âââââââââââââââââââââââââââââââââââââââââââ */
+.section{padding:6rem 4rem;}
+.container{max-width:1080px;margin:0 auto;}
+.section-label{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.section-label.light{color:var(--amber);background:var(--amber-bg);border:1px solid rgba(245,158,11,.2);padding:.25rem .8rem;border-radius:50px;}
+.section-label.dark{color:var(--amber-d);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);padding:.25rem .8rem;border-radius:50px;}
+.section-label.red-label{color:#f87171;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);padding:.25rem .8rem;border-radius:50px;}
+h2.display{
+  font-size:clamp(2rem,3.2vw,2.8rem);font-weight:700;letter-spacing:-.04em;
+  line-height:1.15;text-wrap:pretty;
+}
+h2.display.light{color:#fff;}
+h2.display.dark{color:var(--ink);}
+.section-sub{font-size:1rem;font-weight:400;max-width:520px;margin-top:.8rem;}
+.section-sub.light{color:rgba(255,255,255,.45);}
+.section-sub.dark{color:var(--ink2);}
+
+/* ââ PROBLEMA âââââââââââââââââââââââââââââââââââââââââââ */
+.problema{background:var(--dark);border-top:1px solid var(--border);}
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:3.5rem;}
+.prob-col-head{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:2px solid;}
+.prob-col-head.bad{color:#f87171;border-color:#ef4444;}
+.prob-col-head.good{color:#4ade80;border-color:#22c55e;}
+.timeline{display:flex;flex-direction:column;gap:.6rem;}
+.tl-item{
+  display:flex;gap:.8rem;align-items:flex-start;
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:8px;padding:.85rem 1rem;
+}
+.tl-item.good{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.15);}
+.tl-num{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.75rem;font-weight:600;
+  flex-shrink:0;background:var(--border2);color:var(--amber);
+}
+.tl-item.good .tl-num{background:#22c55e;color:#fff;}
+.tl-h{font-size:.83rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.tl-p{font-size:.75rem;color:var(--muted2);line-height:1.5;}
+.tl-time{font-size:.72rem;font-weight:700;color:#f87171;margin-top:3px;}
+.tl-item.good .tl-time{color:#4ade80;}
+.total-bar{
+  margin-top:.8rem;padding:.85rem 1.2rem;border-radius:8px;text-align:center;
+}
+.total-bar.bad{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);}
+.total-bar.good{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);}
+.total-bar strong{display:block;font-size:1.4rem;font-weight:700;font-family:var(--mono);}
+.total-bar.bad strong{color:#f87171;}
+.total-bar.good strong{color:#4ade80;}
+.total-bar span{font-size:.78rem;color:var(--muted2);}
+.savings-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+  margin-top:2.5rem;
+  background:var(--dark2);border:1px solid var(--border2);
+  border-radius:12px;padding:1.8rem;
+}
+.sv-card{text-align:center;}
+.sv-num{font-size:2rem;font-weight:700;color:var(--amber);font-family:var(--mono);letter-spacing:-.04em;}
+.sv-lbl{font-size:.72rem;color:var(--muted);margin-top:.25rem;}
+.sv-alt{font-size:1.1rem;font-weight:700;color:#4ade80;margin-top:.4rem;font-family:var(--mono);}
+.sv-alt-lbl{font-size:.7rem;color:var(--muted);}
+.sv-divider{width:1px;background:var(--border);align-self:stretch;}
+
+/* ââ COMO FUNCIONA ââââââââââââââââââââââââââââââââââââââ */
+.como{background:var(--dark);border-top:1px solid var(--border);}
+.steps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin:3rem 0 2.5rem;}
+.step-card{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:12px;padding:1.8rem;
+  transition:border-color .25s,box-shadow .25s;
+}
+.step-card:hover{border-color:var(--amber);box-shadow:0 8px 30px var(--amber-glow);}
+.step-num-wrap{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
+.step-n{
+  width:38px;height:38px;background:var(--amber);color:var(--black);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:700;flex-shrink:0;
+}
+.step-card h3{font-size:.95rem;font-weight:700;color:var(--text);}
+.step-card p{font-size:.82rem;color:var(--muted2);line-height:1.65;margin:.5rem 0 .9rem;}
+.step-time{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.72rem;font-weight:700;color:#4ade80;font-family:var(--mono);
+  padding-top:.8rem;border-top:1px solid var(--border);width:100%;
+}
+.step-note{font-size:.68rem;color:var(--muted);margin-left:auto;font-family:var(--font);}
+/* comparison */
+.cmp-table{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+}
+.cmp-row{
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;
+  padding:.8rem 1.2rem;border-bottom:1px solid var(--border);
+}
+.cmp-row:last-child{border-bottom:none;}
+.cmp-row.head{background:var(--dark3);font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.cmp-row.head .cmp-b{color:#f87171;}.cmp-row.head .cmp-a{color:#4ade80;}
+.cmp-l{font-size:.83rem;color:var(--text);font-weight:500;}
+.cmp-b{color:#f87171;text-align:center;font-size:.83rem;}
+.cmp-a{color:#4ade80;text-align:center;font-size:.83rem;font-weight:700;}
+
+/* ââ TESTIMONIALES ââââââââââââââââââââââââââââââââââââââ */
+.testi{background:var(--surface);border-top:1px solid #e2e6f0;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
+.testi-card{
+  background:#fff;border:1px solid #e2e6f0;
+  border-radius:14px;padding:2rem;
+  transition:box-shadow .25s,transform .25s;
+  position:relative;
+}
+.testi-card:hover{box-shadow:0 10px 40px rgba(0,0,0,.08);transform:translateY(-3px);}
+.testi-card::before{
+  content:'\201C';
+  font-size:4rem;font-weight:700;
+  color:var(--amber);line-height:.8;
+  display:block;margin-bottom:.8rem;font-family:Georgia,serif;
+}
+.testi-text{font-size:.9rem;color:var(--ink2);line-height:1.7;margin-bottom:1.5rem;font-weight:400;}
+.testi-author{display:flex;align-items:center;gap:.8rem;}
+.testi-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--amber);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:var(--black);flex-shrink:0;
+}
+.testi-name{font-size:.85rem;font-weight:700;color:var(--ink);}
+.testi-role{font-size:.75rem;color:var(--ink2);}
+.testi-stars{
+  display:flex;gap:2px;margin-bottom:.9rem;
+}
+.star{color:var(--amber);font-size:.85rem;}
+
+/* ââ PRECIOS ââââââââââââââââââââââââââââââââââââââââââââ */
+.precios-section{background:var(--surface2);}
+.precios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;align-items:start;}
+.plan-card{
+  background:#fff;border:1.5px solid #dde2f0;
+  border-radius:16px;padding:2.2rem;
+  position:relative;transition:all .25s;
+}
+.plan-card:hover{border-color:var(--amber-d);box-shadow:0 10px 40px rgba(245,158,11,.12);}
+.plan-card.popular{
+  border-color:var(--amber);
+  box-shadow:0 4px 40px rgba(245,158,11,.2);
+}
+.plan-card.popular:hover{box-shadow:0 12px 50px rgba(245,158,11,.3);}
+.pop-badge{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:var(--amber);color:var(--black);
+  font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:.3rem 1rem;border-radius:50px;white-space:nowrap;
+}
+.plan-tag{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-dd);margin-bottom:1rem;}
+.plan-price-old{font-size:.95rem;text-decoration:line-through;color:#aab;display:block;margin-bottom:-.1rem;}
+.plan-price{font-size:2.6rem;font-weight:700;color:var(--ink);letter-spacing:-.05em;line-height:1;}
+.plan-price sup{font-size:1.1rem;font-weight:600;vertical-align:super;}
+.plan-price sub{font-size:.85rem;color:var(--ink2);vertical-align:baseline;}
+.plan-period{font-size:.8rem;color:var(--ink2);margin:.5rem 0 1rem;}
+.plan-save{
+  display:inline-block;background:#dcfce7;color:#15803d;
+  font-size:.72rem;font-weight:700;padding:.25rem .7rem;
+  border-radius:5px;margin-bottom:1.4rem;
+}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.8rem;}
+.plan-feats li{display:flex;gap:.5rem;font-size:.86rem;color:var(--ink);}
+.plan-feats li::before{content:'â';color:var(--green);font-weight:800;flex-shrink:0;}
+.btn-plan{
+  display:block;text-align:center;padding:.8rem;border-radius:9px;
+  font-size:.9rem;font-weight:700;transition:all .2s;
+}
+.btn-plan-outline{border:2px solid var(--amber);color:var(--amber-dd);}
+.btn-plan-outline:hover{background:var(--amber);color:var(--black);}
+.btn-plan-fill{background:var(--amber);color:var(--black);box-shadow:0 4px 20px rgba(245,158,11,.3);}
+.btn-plan-fill:hover{background:var(--amber-d);transform:translateY(-2px);box-shadow:0 8px 30px rgba(245,158,11,.4);}
+
+/* ââ PEDIDO / FORM ââââââââââââââââââââââââââââââââââââââ */
+.pedido{background:var(--surface);padding:6rem 4rem;}
+.pedido-card{
+  max-width:660px;margin:0 auto;
+  background:#fff;border:1px solid #dde2f0;
+  border-radius:18px;padding:3rem;
+  box-shadow:0 8px 40px rgba(0,0,0,.07);
+}
+.pedido-card h3{font-size:1.4rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;}
+.pedido-sub{font-size:.9rem;color:var(--ink2);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid #f0f2f8;}
+.form-group{margin-bottom:1.2rem;}
+.form-label{display:block;font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:.45rem;}
+.form-label span{color:var(--red);}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:.7rem .95rem;
+  border:1.5px solid #dde2f0;border-radius:9px;
+  font-size:.9rem;color:var(--ink);font-family:inherit;
+  background:#fff;transition:border-color .2s,box-shadow .2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  outline:none;border-color:var(--amber);
+  box-shadow:0 0 0 3px rgba(245,158,11,.12);
+}
+.form-textarea{resize:vertical;min-height:90px;}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.check-item{
+  display:flex;align-items:center;gap:.55rem;
+  padding:.65rem .9rem;border:1.5px solid #dde2f0;
+  border-radius:9px;cursor:pointer;font-size:.84rem;font-weight:500;color:var(--ink);
+  transition:all .2s;
+}
+.check-item.active{border-color:#bbf7d0;background:#f0fdf4;}
+.check-item.active:hover{border-color:#22c55e;}
+.check-item input{width:16px;height:16px;accent-color:var(--amber);cursor:pointer;flex-shrink:0;}
+.badge-ok{font-size:.62rem;background:#22c55e;color:#fff;padding:.1rem .4rem;border-radius:4px;font-weight:800;margin-left:auto;}
+.field-error{display:none;color:var(--red);font-size:.75rem;margin-top:.3rem;}
+.btn-enviar{
+  width:100%;background:var(--amber);color:var(--black);
+  padding:.95rem;border:none;border-radius:10px;
+  font-size:.98rem;font-weight:700;cursor:pointer;
+  margin-top:.4rem;box-shadow:0 4px 20px var(--amber-glow);
+  transition:all .2s;font-family:inherit;
+}
+.btn-enviar:hover{background:var(--amber-d);transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,.35);}
+.nota-form{text-align:center;font-size:.78rem;color:var(--ink2);margin-top:.9rem;}
+
+/* ââ GARANTIA âââââââââââââââââââââââââââââââââââââââââââ */
+.garantia{
+  background:linear-gradient(135deg,var(--black),var(--dark2));
+  border-top:1px solid var(--border);
+  text-align:center;padding:5rem 4rem;
+}
+.garantia h2{font-size:2rem;font-weight:700;color:#fff;letter-spacing:-.04em;margin-bottom:.8rem;}
+.garantia p{font-size:1rem;color:rgba(255,255,255,.5);max-width:520px;margin:0 auto 2rem;}
+.g-badges{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;}
+.g-badge{
+  display:flex;align-items:center;gap:.6rem;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  padding:.6rem 1.2rem;border-radius:50px;
+  font-size:.82rem;font-weight:600;color:rgba(255,255,255,.7);
+}
+
+/* ââ FAQ ââââââââââââââââââââââââââââââââââââââââââââââââ */
+.faq-section{background:var(--surface);}
+.faq-list{max-width:680px;margin:3rem auto 0;display:flex;flex-direction:column;gap:.8rem;}
+details{background:#fff;border:1px solid #dde2f0;border-radius:11px;overflow:hidden;transition:.25s;}
+details[open]{border-color:var(--amber);box-shadow:0 4px 20px rgba(245,158,11,.1);}
+summary{
+  padding:1.1rem 1.4rem;font-weight:700;font-size:.92rem;cursor:pointer;
+  list-style:none;display:flex;justify-content:space-between;align-items:center;
+  color:var(--ink);
+}
+summary::after{content:'+';font-size:1.3rem;color:var(--amber);}
+details[open] summary::after{content:'â';}
+details p{padding:0 1.4rem 1.1rem;font-size:.88rem;color:var(--ink2);line-height:1.7;}
+
+/* ââ FOOTER âââââââââââââââââââââââââââââââââââââââââââââ */
+footer{
+  background:var(--black);border-top:1px solid var(--border);
+  text-align:center;padding:2.5rem 2rem;
+  font-size:.82rem;color:var(--muted);
+}
+footer .logo{display:block;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.6rem;letter-spacing:-.03em;}
+footer .logo span{color:var(--amber);}
+footer p{margin-top:.3rem;}
+
+/* ââ WHATSAPP âââââââââââââââââââââââââââââââââââââââââââ */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:0;text-decoration:none;}
+.wa-label{
+  background:#fff;color:#128c7e;font-size:.85rem;font-weight:700;
+  padding:.5rem .9rem .5rem 1.1rem;border-radius:50px 0 0 50px;
+  box-shadow:-4px 4px 20px rgba(37,211,102,.15);white-space:nowrap;
+  max-width:0;overflow:hidden;opacity:0;
+  transition:max-width .4s var(--spring),opacity .3s,padding .3s;pointer-events:none;
+}
+.wa-float:hover .wa-label,.wa-float:focus .wa-label{max-width:220px;opacity:1;pointer-events:auto;}
+.wa-btn{
+  width:56px;height:56px;background:#25d366;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(37,211,102,.4),0 8px 32px rgba(37,211,102,.2);
+  transition:transform .25s var(--spring),box-shadow .25s;flex-shrink:0;
+}
+.wa-float:hover .wa-btn{transform:scale(1.1);box-shadow:0 6px 20px rgba(37,211,102,.5);}
+.wa-float:active .wa-btn{transform:scale(.95);}
+.wa-btn svg{width:28px;height:28px;fill:#fff;}
+@keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5);}70%{box-shadow:0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
+.wa-btn{animation:wa-pulse 2.5s ease-out 2s 3;}
+
+/* ââ REVEAL âââââââââââââââââââââââââââââââââââââââââââââ */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}.d4{transition-delay:.32s;}.d5{transition-delay:.4s;}
+
+/* ââ TWEAKS PANEL âââââââââââââââââââââââââââââââââââââââ */
+#tweaks-panel{
+  display:none;position:fixed;bottom:100px;right:28px;z-index:1000;
+  background:var(--dark2);border:1px solid var(--border2);border-radius:12px;
+  padding:1.2rem;width:220px;box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+#tweaks-panel h5{font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;}
+.tweak-row{margin-bottom:.9rem;}
+.tweak-label{font-size:.72rem;color:var(--muted2);margin-bottom:.4rem;display:block;}
+.tweak-row select,.tweak-row input[type=range]{width:100%;font-size:.8rem;background:var(--dark3);border:1px solid var(--border);color:var(--text);padding:.3rem .5rem;border-radius:6px;font-family:inherit;}
+.tweak-row input[type=range]{padding:0;}
+.tweak-swatch-row{display:flex;gap:.4rem;flex-wrap:wrap;}
+.swatch{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;}
+.swatch.active{border-color:#fff;}
+
+/* ââ RESPONSIVE âââââââââââââââââââââââââââââââââââââââââ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;padding:4rem 2rem 3rem;}
+  .hero-right{display:none;}
+  .prob-grid,.steps-grid,.precios-grid,.testi-grid{grid-template-columns:1fr 1fr;}
+  .savings-row{grid-template-columns:1fr 1fr;}
+  .sv-divider{display:none;}
+  .section,.pedido,.garantia{padding:5rem 2rem;}
+}
+@media(max-width:700px){
+  .hero h1{font-size:2rem;}
+  .prob-grid,.precios-grid,.testi-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto;}
+  .steps-grid{grid-template-columns:1fr;}
+  .savings-row{grid-template-columns:1fr;}
+  .cmp-row{grid-template-columns:1fr .8fr .8fr;}
+  nav ul{display:none;}
+  .nav-hamburger{display:flex;}
+  .hero-btns{flex-direction:column;}
+  .hero-btns a{text-align:center;}
+  .check-grid{grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce){.reveal,.reveal-left,.reveal-right,.reveal-scale,.progress-fill,.ticker-track,.hero-badge::before,.status-pill::before,.wa-btn,.orb{animation:none;transition:none;opacity:1;transform:none;}}
+
+/* ââ EXTRA REVEAL VARIANTS âââââââââââââââââââââââââââââ */
+.reveal-left{opacity:0;transform:translateX(-48px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+.reveal-right{opacity:0;transform:translateX(48px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+.reveal-scale{opacity:0;transform:scale(.92);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.reveal-left.visible,.reveal-right.visible,.reveal-scale.visible{opacity:1;transform:none;}
+
+/* ââ SCROLL PROGRESS BAR âââââââââââââââââââââââââââââââ */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--amber-d),var(--amber));
+  z-index:9999;transition:width .1s linear;
+  box-shadow:0 0 8px var(--amber-glow);
+}
+
+/* ââ FLOATING ORBS (hero bg) âââââââââââââââââââââââââââ */
+.orb{
+  position:absolute;border-radius:50%;
+  pointer-events:none;filter:blur(80px);
+}
+.orb1{width:500px;height:500px;background:rgba(245,158,11,.07);top:-10%;left:-10%;animation:orbFloat1 14s ease-in-out infinite;}
+.orb2{width:400px;height:400px;background:rgba(239,68,68,.05);top:20%;right:-5%;animation:orbFloat2 18s ease-in-out infinite;}
+.orb3{width:300px;height:300px;background:rgba(245,158,11,.05);bottom:10%;left:30%;animation:orbFloat3 22s ease-in-out infinite;}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-30px) scale(1.05);}66%{transform:translate(-20px,20px) scale(.97);}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-30px,40px) scale(1.08);}}
+@keyframes orbFloat3{0%,100%{transform:translate(0,0) scale(1);}40%{transform:translate(25px,-20px) scale(1.04);}80%{transform:translate(-15px,15px) scale(.96);}}
+
+/* ââ MAGNETIC CARD âââââââââââââââââââââââââââââââââââââ */
+.magnetic{transition:transform .25s var(--ease),box-shadow .25s;}
+
+/* ââ SECTION SWEEP LINE ââââââââââââââââââââââââââââââââ */
+.section-sweep{
+  position:relative;overflow:hidden;
+}
+.section-sweep::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(245,158,11,.04),transparent);
+  transform:translateX(-100%);
+  transition:transform 1.2s var(--ease);
+  pointer-events:none;
+}
+.section-sweep.swept::after{transform:translateX(100%);}
+
+/* ââ STAT NUMBER HIGHLIGHT âââââââââââââââââââââââââââââ */
+@keyframes numPop{0%{transform:scale(.8);opacity:0;}60%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+.num-pop{animation:numPop .6s var(--spring) both;}
+
+/* ââ FLOATING PARTICLES (hero) âââââââââââââââââââââââââ */
+.particle{
+  position:absolute;width:2px;height:2px;
+  background:var(--amber);border-radius:50%;
+  pointer-events:none;opacity:0;
+}
+@keyframes particleFloat{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:.6;}
+  90%{opacity:.2;}
+  100%{transform:translateY(-120px) translateX(var(--px));opacity:0;}
+}
+
+/* ââ HOVER GLOW on feature cards âââââââââââââââââââââââ */
+.feature-card{position:relative;overflow:hidden;}
+.feature-card::after{
+  content:'';position:absolute;
+  width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,.15),transparent 70%);
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  left:var(--mx,50%);top:var(--my,50%);
+  opacity:0;transition:opacity .3s;
+}
+.feature-card:hover::after{opacity:1;}
+</style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P74R6ZSR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- BANNER -->
+<div class="banner" id="topBanner">
+  <span class="tag">LANZAMIENTO</span>
+  Los <strong style="color:rgba(255,255,255,.8)">4 formularios mÃ¡s usados del RPI</strong> ya disponibles Â· MÃ¡s formularios prÃ³ximamente
+</div>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress"></div>
+
+<!-- NAV -->
+<nav id="mainNav" style="top:32px">
+  <div class="logo">Gestor<span>RPI</span></div>
+  <ul>
+    <li><a href="#como-funciona">CÃ³mo funciona</a></li>
+    <li><a href="#precios">Precios</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#precios" class="nav-cta">Empezar ahora</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()" aria-label="MenÃº">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="#como-funciona" onclick="toggleMenu()">CÃ³mo funciona</a>
+  <a href="#precios" onclick="toggleMenu()">Precios</a>
+  <a href="#faq" onclick="toggleMenu()">FAQ</a>
+  <a href="#precios" class="nav-cta" onclick="toggleMenu()">Empezar ahora</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-left">
+    <div class="hero-badge">En producciÃ³n Â· RPI Buenos Aires</div>
+    <h1>50 solicitudes al RPI<br/>en <em>45 minutos.</em><br/>No en 16 horas.</h1>
+    <p class="hero-sub">
+      GestorRPI automatiza todo el ciclo: cargÃ¡s los datos, la app entra al RPI, solicita los informes y descarga los PDFs renombrados y organizados.<br/>
+      <strong>Sin errores de tipeo. Sin archivos perdidos. Sin mirar la pantalla.</strong>
+    </p>
+    <div class="hero-btns">
+      <a href="#precios" class="btn-primary">Ver planes y suscribirse</a>
+      <a href="#como-funciona" class="btn-ghost">CÃ³mo funciona</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num"><span data-count="20">0</span><span>x</span></span>
+        <span class="lbl">mÃ¡s rÃ¡pido que manual</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num"><span data-count="0">0</span><span style="color:#fff">%</span></span>
+        <span class="lbl">errores de tipeo</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num"><span data-count="50">0</span><span>+</span></span>
+        <span class="lbl">solicitudes por sesiÃ³n</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP MOCKUP -->
+  <div class="hero-right">
+    <div class="app-window" id="appMockup">
+      <div class="app-titlebar">
+        <div class="app-dots">
+          <div class="app-dot dot-r"></div>
+          <div class="app-dot dot-y"></div>
+          <div class="app-dot dot-g"></div>
+        </div>
+        <div class="app-title">GestorRPI Â· Informes de Dominio</div>
+      </div>
+      <div class="app-body">
+        <div class="app-toolbar">
+          <span class="app-toolbar-title">Cola de solicitudes</span>
+          <div class="status-pill" id="appStatus">Procesando...</div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span class="progress-label">Progreso de envÃ­o</span>
+            <span class="progress-val" id="progressVal">47 / 50</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:94%"></div></div>
+        </div>
+        <table class="app-table">
+          <thead>
+            <tr><th>#</th><th>Titular</th><th>Partida</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>045</td><td>FERNÃNDEZ, M.</td><td>082-14532</td><td class="badge-ok">â Enviado</td></tr>
+            <tr><td>046</td><td>RODRÃGUEZ, C.</td><td>014-09841</td><td class="badge-ok">â Enviado</td></tr>
+            <tr><td>047</td><td>SANTOS, L.</td><td>031-22156</td><td class="badge-proc">ENVIANDO</td></tr>
+            <tr><td>048</td><td>GÃMEZ, A.</td><td>007-88321</td><td class="badge-wait">En cola</td></tr>
+            <tr><td>049</td><td>LÃPEZ, R.</td><td>055-41092</td><td class="badge-wait">En cola</td></tr>
+          </tbody>
+        </table>
+        <div class="app-summary">
+          <div class="app-summary-stat">
+            <div class="s-num">47</div>
+            <div class="s-lbl">Enviados</div>
+          </div>
+          <div class="app-summary-divider"></div>
+          <div class="app-summary-stat">
+            <div class="s-num" style="color:#4ade80">3</div>
+            <div class="s-lbl">Restantes</div>
+          </div>
+          <div class="app-summary-divider"></div>
+          <div class="app-summary-stat">
+            <div class="s-num" style="color:#f87171">0</div>
+            <div class="s-lbl">Errores</div>
+          </div>
+          <div class="app-summary-divider"></div>
+          <div class="app-summary-stat">
+            <div class="s-num" style="color:var(--muted2)">~3m</div>
+            <div class="s-lbl">Restante</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker">
+    <div class="ticker-item"><strong>+200 profesionales</strong> ya usan GestorRPI</div>
+    <div class="ticker-item">Disponible para <strong>Mac y Windows</strong></div>
+    <div class="ticker-item">Tus credenciales <strong>nunca salen de tu PC</strong></div>
+    <div class="ticker-item">Informe de Dominio Â· InhibiciÃ³n Â· AnotaciÃ³n Personal Â· Certificado</div>
+    <div class="ticker-item">Soporte por <strong>WhatsApp en menos de 2 horas</strong></div>
+    <div class="ticker-item">Actualizaciones <strong>sin costo adicional</strong></div>
+    <div class="ticker-item">Escribanos Â· Abogados Â· Gestores Â· Estudios jurÃ­dicos</div>
+    <!-- duplicado para loop continuo -->
+    <div class="ticker-item"><strong>+200 profesionales</strong> ya usan GestorRPI</div>
+    <div class="ticker-item">Disponible para <strong>Mac y Windows</strong></div>
+    <div class="ticker-item">Tus credenciales <strong>nunca salen de tu PC</strong></div>
+    <div class="ticker-item">Informe de Dominio Â· InhibiciÃ³n Â· AnotaciÃ³n Personal Â· Certificado</div>
+    <div class="ticker-item">Soporte por <strong>WhatsApp en menos de 2 horas</strong></div>
+    <div class="ticker-item">Actualizaciones <strong>sin costo adicional</strong></div>
+    <div class="ticker-item">Escribanos Â· Abogados Â· Gestores Â· Estudios jurÃ­dicos</div>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section class="section problema" id="problema">  <div class="container">
+    <div style="text-align:center;margin-bottom:.5rem">
+      <span class="section-label red-label">El problema real</span>
+    </div>
+    <h2 class="display light reveal" style="text-align:center">Cada solicitud manual te roba<br/>8 minutos de tu dÃ­a</h2>
+    <p class="section-sub light reveal" style="text-align:center;margin:0 auto 0">Con 50 solicitudes por semana, eso son <strong style="color:var(--amber)">mÃ¡s de 6 horas</strong> de trabajo repetitivo que no le agregÃ¡s ningÃºn valor a tu estudio.</p>
+
+    <div class="prob-grid">
+      <div class="reveal d1">
+        <div class="prob-col-head bad">Sin GestorRPI â 50 solicitudes</div>
+        <div class="timeline">
+          <div class="tl-item reveal-left d1"><div class="tl-num">1</div><div><div class="tl-h">EntrÃ¡s al portal del RPI</div><div class="tl-p">EsperÃ¡s que cargue, navegÃ¡s a la secciÃ³n correcta</div><div class="tl-time">Ã 50 veces â 50 min</div></div></div>
+          <div class="tl-item"><div class="tl-num">2</div><div><div class="tl-h">CargÃ¡s datos a mano</div><div class="tl-p">Partida, titular, DNI, datos del inmueble. Con riesgo de tipeo.</div><div class="tl-time">Ã 50 veces â 4 hs</div></div></div>
+          <div class="tl-item"><div class="tl-num">3</div><div><div class="tl-h">DescargÃ¡s PDF por PDF</div><div class="tl-p">LocalizÃ¡s cada trÃ¡mite, descargÃ¡s, renombrÃ¡s, organizÃ¡s la carpeta</div><div class="tl-time">Ã 50 veces â 3 hs</div></div></div>
+          <div class="tl-item"><div class="tl-num">!</div><div><div class="tl-h">Errores y reprocesos</div><div class="tl-p">10â15% de solicitudes con errores de tipeo o archivos mal organizados</div><div class="tl-time">+1â2 hs de correcciÃ³n</div></div></div>
+        </div>
+        <div class="total-bar bad"><strong>12â16 horas</strong><span>de trabajo repetitivo por semana</span></div>
+      </div>
+      <div class="reveal d2">
+        <div class="prob-col-head good">Con GestorRPI â 50 solicitudes</div>
+        <div class="timeline">
+          <div class="tl-item good"><div class="tl-num">1</div><div><div class="tl-h">CargÃ¡s en la app (offline)</div><div class="tl-p">Sin presiÃ³n. Sin gastar crÃ©ditos del RPI. PodÃ©s pausar y retomar.</div><div class="tl-time">20 min en total</div></div></div>
+          <div class="tl-item good"><div class="tl-num">2</div><div><div class="tl-h">HacÃ©s clic en "Solicitar"</div><div class="tl-p">GestorRPI entra al RPI automÃ¡ticamente y envÃ­a todo. Vos hacÃ©s otra cosa.</div><div class="tl-time">10 min (automÃ¡tico)</div></div></div>
+          <div class="tl-item good"><div class="tl-num">3</div><div><div class="tl-h">HacÃ©s clic en "Descargar"</div><div class="tl-p">Baja los PDFs, los renombra y los agrupa por cliente automÃ¡ticamente.</div><div class="tl-time">5 min (automÃ¡tico)</div></div></div>
+          <div class="tl-item good"><div class="tl-num">â</div><div><div class="tl-h">Cero errores, cero reprocesos</div><div class="tl-p">Sin errores humanos. Los archivos siempre estÃ¡n donde tienen que estar.</div><div class="tl-time">0 min de correcciÃ³n</div></div></div>
+        </div>
+        <div class="total-bar good"><strong>~45 minutos</strong><span>incluyendo el tiempo de espera del RPI</span></div>
+      </div>
+    </div>
+
+    <div class="savings-row reveal">
+      <div class="sv-card">
+        <div class="sv-num" data-count="20">0</div>
+        <div class="sv-lbl">veces mÃ¡s rÃ¡pido</div>
+      </div>
+      <div class="sv-divider"></div>
+      <div class="sv-card">
+        <div class="sv-alt" data-count-hrs="15">0 hs/sem</div>
+        <div class="sv-alt-lbl">recuperadas por semana</div>
+      </div>
+      <div class="sv-divider"></div>
+      <div class="sv-card">
+        <div class="sv-alt" data-count-err="0">0%</div>
+        <div class="sv-alt-lbl">errores de tipeo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="section como" id="como-funciona">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:.5rem">
+      <span class="section-label light">CÃ³mo funciona</span>
+    </div>
+    <h2 class="display light reveal" style="text-align:center">4 pasos. Todo listo.</h2>
+    <p class="section-sub light reveal" style="text-align:center;margin:0 auto">Sin conocimientos tÃ©cnicos. Sin configuraciones. En 2 minutos estÃ¡s funcionando.</p>
+
+    <div class="steps-grid">
+      <div class="step-card reveal d1">
+        <div class="step-num-wrap"><div class="step-n">1</div></div>
+        <h3>ConfiguraciÃ³n inicial</h3>
+        <p>Registrarte en GestorRPI, descargar la app y guardar tus credenciales del RPI una sola vez. <strong style="color:var(--text)">Todo queda en tu PC. Nunca llega a nuestros servidores.</strong></p>
+        <div class="step-time">2 min una sola vez <span class="step-note">Sin datos tÃ©cnicos</span></div>
+      </div>
+      <div class="step-card reveal d2">
+        <div class="step-num-wrap"><div class="step-n">2</div></div>
+        <h3>CargÃ¡s solicitudes en la app</h3>
+        <p>CompletÃ¡s los formularios precargados con datos de tus clientes. 10, 50 o 100 solicitudes. <strong style="color:var(--text)">Sin tocar el RPI. Sin gastar crÃ©ditos.</strong></p>
+        <div class="step-time">20 min / 50 solicitudes <span class="step-note">PodÃ©s hacerlo offline</span></div>
+      </div>
+      <div class="step-card reveal d3">
+        <div class="step-num-wrap"><div class="step-n">3</div></div>
+        <h3>GestorRPI solicita automÃ¡tico</h3>
+        <p>Un clic en "Solicitar informes". <strong style="color:var(--text)">La app entra al RPI, completa formularios, envÃ­a solicitudes y guarda los nÃºmeros de trÃ¡mite.</strong> Vos mientras tanto hacÃ©s otras cosas.</p>
+        <div class="step-time">10 min / 50 solicitudes <span class="step-note">vs 4â6 hs manual</span></div>
+      </div>
+      <div class="step-card reveal d4">
+        <div class="step-num-wrap"><div class="step-n">4</div></div>
+        <h3>DescargÃ¡ y organizÃ¡ automÃ¡tico</h3>
+        <p>Cuando los informes estÃ¡n listos, un clic en "Descargar". <strong style="color:var(--text)">GestorRPI baja los PDFs, los renombra y los agrupa por cliente.</strong> AbrÃ­s la carpeta y todo estÃ¡ prolijo.</p>
+        <div class="step-time">5 min / 50 PDFs <span class="step-note">vs 3â4 hs manual</span></div>
+      </div>
+    </div>
+
+    <div class="cmp-table reveal">
+      <div class="cmp-row head"><div></div><div class="cmp-b">Sin GestorRPI</div><div class="cmp-a">Con GestorRPI</div></div>
+      <div class="cmp-row"><div class="cmp-l">Tiempo total / 50 solicitudes</div><div class="cmp-b">12â16 horas</div><div class="cmp-a">45 minutos</div></div>
+      <div class="cmp-row"><div class="cmp-l">Errores de tipeo</div><div class="cmp-b">10â15%</div><div class="cmp-a">0%</div></div>
+      <div class="cmp-row"><div class="cmp-l">Archivos desorganizados</div><div class="cmp-b">Frecuente</div><div class="cmp-a">Nunca</div></div>
+      <div class="cmp-row"><div class="cmp-l">Reprocesos por errores</div><div class="cmp-b">1â2 hs/semana</div><div class="cmp-a">0 hs</div></div>
+      <div class="cmp-row"><div class="cmp-l">EstrÃ©s del equipo</div><div class="cmp-b">Alto</div><div class="cmp-a">MÃ­nimo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO VIDEO -->
+<section class="section" style="background:var(--dark2);border-top:1px solid var(--border);text-align:center;padding:5rem 4rem;">
+  <div class="container">
+    <span class="section-label light">Demo en vivo</span>
+    <h2 class="display light reveal" style="margin-top:.5rem">MirÃ¡ cÃ³mo funciona</h2>
+    <p class="section-sub light reveal" style="margin:0 auto">Una sesiÃ³n real. Sin ediciÃ³n. 50 solicitudes en menos de 15 minutos.</p>
+    <div style="max-width:820px;margin:2.5rem auto 0;" class="reveal">
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:14px;border:1px solid var(--border2);box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <iframe src="https://www.youtube.com/embed/LynTGfdTYPo" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+      </div>
+    </div>
+    <p style="margin-top:1.2rem;font-size:.8rem;color:var(--muted)">Â¿QuerÃ©s ver una demo personalizada? <a href="https://wa.me/5491172373408" target="_blank" style="color:rgba(255,255,255,.5);border-bottom:1px solid rgba(255,255,255,.2);">Escribinos por WhatsApp</a></p>
+  </div>
+</section>
+
+<!-- TESTIMONIALES -->
+<section class="section testi" id="testimoniales">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="section-label dark">Lo que dicen los usuarios</span>
+      <h2 class="display dark reveal" style="margin-top:.5rem">Profesionales que ya liberaron su tiempo</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal d1">
+        <div class="testi-stars"><span class="star">â</span><span class="star">â</span><span class="star">â</span><span class="star">â</span><span class="star">â</span></div>
+        <p class="testi-text">Antes pasaba dos maÃ±anas enteras cargando solicitudes. Ahora cargo todo en 20 minutos y me olvido. Lo que mÃ¡s me sorprendiÃ³ es que los archivos ya vienen organizados por cliente, no tengo que hacer nada.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">ML</div>
+          <div><div class="testi-name">MarÃ­a Laura F.</div><div class="testi-role">Escribana Â· Partido de La Plata</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal d2">
+        <div class="testi-stars"><span class="star">â</span><span class="star">â</span><span class="star">â</span><span class="star">â</span><span class="star">â</span></div>
+        <p class="testi-text">Tenemos un estudio con cuatro abogados y usÃ¡bamos turnos para cargar al RPI. Con GestorRPI, una sola persona lo resuelve en una hora. Es un cambio brutal en la productividad del equipo.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">CR</div>
+          <div><div class="testi-name">Carlos R.</div><div class="testi-role">Abogado Â· Estudio jurÃ­dico Â· Quilmes</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal d3">
+        <div class="testi-stars"><span class="star">â</span><span class="star">â</span><span class="star">â</span><span class="star">â</span><span class="star">â</span></div>
+        <p class="testi-text">Lo probÃ© con desconfianza porque no soy tÃ©cnico, pero la instalaciÃ³n tardÃ³ 5 minutos y funcionÃ³ a la primera. El soporte responde rÃ¡pido y cuando el RPI actualizÃ³ su portal, la app se actualizÃ³ sola.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JG</div>
+          <div><div class="testi-name">Jorge G.</div><div class="testi-role">Gestor Â· Zona Norte GBA</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIOS -->
+<section class="section precios-section" id="precios">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="section-label dark">Planes y precios</span>
+      <h2 class="display dark reveal" style="margin-top:.5rem">Un solo pago por perÃ­odo, sin sorpresas</h2>
+      <p class="section-sub dark reveal" style="margin:0 auto">Sin costos por consulta. Sin setup fees. Todos los formularios incluidos.</p>
+    </div>
+    <div class="precios-grid">
+      <div class="plan-card reveal d1">
+        <div class="plan-tag">Mensual</div>
+        <div class="plan-price"><sup>$</sup>60.000</div>
+        <div class="plan-period">por 1 mes Â· RenovaciÃ³n automÃ¡tica</div>
+        <ul class="plan-feats">
+          <li>BÃºsquedas ilimitadas</li>
+          <li>Acceso completo a todas las funciones</li>
+          <li>Soporte por WhatsApp</li>
+          <li>Actualizaciones incluidas</li>
+        </ul>
+        <a href="register.html?plan=mensual" class="btn-plan btn-plan-outline">Suscribirse</a>
+      </div>
+      <div class="plan-card reveal d2">
+        <div class="plan-tag">Bimestral</div>
+        <div class="plan-price"><sup>$</sup>90.000</div>
+        <div class="plan-period">por 2 meses Â· $45.000/mes</div>
+        <div class="plan-save">AhorrÃ¡s $30.000</div>
+        <ul class="plan-feats">
+          <li>Todo lo del plan Mensual</li>
+          <li>Prioridad en soporte</li>
+          <li>Acceso anticipado a nuevas funciones</li>
+          <li>2 meses sin preocuparse por renovar</li>
+        </ul>
+        <a href="register.html?plan=bimestral" class="btn-plan btn-plan-outline">Suscribirse</a>
+      </div>
+      <div class="plan-card popular reveal d3">
+        <div class="pop-badge">Oferta de lanzamiento</div>
+        <div class="plan-tag">Trimestral</div>
+        <div class="plan-price-old">$120.000</div>
+        <div class="plan-price"><sup>$</sup>100.000</div>
+        <div class="plan-period">por 3 meses Â· $33.333/mes</div>
+        <div class="plan-save">AhorrÃ¡s $80.000 vs Mensual</div>
+        <ul class="plan-feats">
+          <li>Todo lo del plan Bimestral</li>
+          <li><strong>Precio especial de lanzamiento</strong></li>
+          <li>Soporte preferencial</li>
+          <li>Ideal para uso intensivo</li>
+        </ul>
+        <a href="register.html?plan=trimestral" class="btn-plan btn-plan-fill">Suscribirse</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PEDIDO FORMULARIOS -->
+<section class="pedido" id="pedido-formularios">
+  <div class="container" style="text-align:center;margin-bottom:2.5rem">
+    <span class="section-label dark">Ya suscripto</span>
+    <h2 class="display dark reveal" style="margin-top:.5rem">ConfigurÃ¡ tu cuenta</h2>
+    <p class="section-sub dark reveal" style="margin:0 auto">CompletÃ¡ este formulario y te activamos exactamente los trÃ¡mites que usÃ¡s en menos de 24 horas.</p>
+  </div>
+  <div class="pedido-card reveal">
+    <h3>Formulario de activaciÃ³n</h3>
+    <p class="pedido-sub">CompletÃ¡ estos datos y te contactamos por WhatsApp para activar tu acceso.</p>
+
+    <div id="formSuccess" style="display:none;text-align:center;padding:2rem 0;">
+      <div style="font-size:2.5rem;margin-bottom:1rem">â</div>
+      <h4 style="font-size:1.1rem;font-weight:800;color:#15803d;margin-bottom:.4rem">Â¡Recibimos tu pedido!</h4>
+      <p style="color:var(--ink2);font-size:.88rem">Te contactamos por WhatsApp en menos de 24hs para activar tu acceso.</p>
+    </div>
+
+    <form id="pedidoForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="inputEmail">Email de contacto <span>*</span></label>
+        <input id="inputEmail" name="email" class="form-input" type="email" placeholder="ejemplo@mail.com" autocomplete="email"/>
+        <span class="field-error" id="errEmail">IngresÃ¡ un email vÃ¡lido.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inputNombre">Nombre completo <span>*</span></label>
+        <input id="inputNombre" name="nombre" class="form-input" type="text" placeholder="Juan GarcÃ­a" autocomplete="name"/>
+        <span class="field-error" id="errNombre">IngresÃ¡ tu nombre.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inputTelegram">WhatsApp o Telegram <span>*</span></label>
+        <input id="inputTelegram" name="telegram" class="form-input" type="text" placeholder="@usuario o +54 9 11 xxxx-xxxx"/>
+        <span class="field-error" id="errTelegram">IngresÃ¡ tu WhatsApp o Telegram.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Formularios que usÃ¡s <span>*</span></label>
+        <p style="font-size:.78rem;color:var(--ink2);margin-bottom:.65rem">Los marcados en verde ya estÃ¡n disponibles.</p>
+        <div class="check-grid">
+          <label class="check-item active"><input type="checkbox" name="formularios" value="Informe de Dominio" checked/> Informe de Dominio <span class="badge-ok">Listo</span></label>
+          <label class="check-item active"><input type="checkbox" name="formularios" value="Informe de InhibiciÃ³n" checked/> Informe de InhibiciÃ³n <span class="badge-ok">Listo</span></label>
+          <label class="check-item active"><input type="checkbox" name="formularios" value="AnotaciÃ³n Personal"/> AnotaciÃ³n Personal <span class="badge-ok">Listo</span></label>
+          <label class="check-item active"><input type="checkbox" name="formularios" value="Certificado de Dominio"/> Certificado de Dominio <span class="badge-ok">Listo</span></label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inputOtros">Â¿QuÃ© otros formularios necesitÃ¡s?</label>
+        <textarea id="inputOtros" name="otros" class="form-textarea" placeholder="Contanos quÃ© otros trÃ¡mites usÃ¡s y los priorizamosâ¦"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inputVolumen">Consultas aproximadas por semana</label>
+        <select id="inputVolumen" name="volumen" class="form-select">
+          <option value="">SeleccionÃ¡ una opciÃ³n</option>
+          <option>Menos de 10</option>
+          <option>Entre 10 y 50</option>
+          <option>Entre 50 y 200</option>
+          <option>MÃ¡s de 200</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-enviar" id="btnEnviar">Enviar y activar mi cuenta</button>
+      <p class="nota-form">Tus datos son confidenciales y solo se usan para configurar tu acceso.</p>
+    </form>
+  </div>
+  <script>
+  (function(){
+    var FID="xqegvnvy";
+    function err(id,show){var e=document.getElementById(id);if(e)e.style.display=show?"block":"none";}
+    function hl(el,error){el.style.borderColor=error?"#ef4444":"";}
+    document.getElementById("pedidoForm").addEventListener("submit",async function(e){
+      e.preventDefault();var ok=true;
+      var em=document.getElementById("inputEmail"),nm=document.getElementById("inputNombre"),tg=document.getElementById("inputTelegram");
+      var emOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim());err("errEmail",!emOk);hl(em,!emOk);if(!emOk)ok=false;
+      var nmOk=nm.value.trim().length>=2;err("errNombre",!nmOk);hl(nm,!nmOk);if(!nmOk)ok=false;
+      var tgOk=tg.value.trim().length>=3;err("errTelegram",!tgOk);hl(tg,!tgOk);if(!tgOk)ok=false;
+      if(!ok)return;
+      var checks=Array.from(document.querySelectorAll('input[name="formularios"]:checked')).map(function(c){return c.value;}).join(", ")||"Ninguno";
+      var btn=document.getElementById("btnEnviar");btn.disabled=true;btn.textContent="Enviandoâ¦";
+      try{
+        var r=await fetch("https://formspree.io/f/"+FID,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify({email:em.value.trim(),nombre:nm.value.trim(),telegram:tg.value.trim(),formularios:checks,otros:document.getElementById("inputOtros").value.trim(),volumen:document.getElementById("inputVolumen").value})});
+        if(r.ok){document.getElementById("pedidoForm").style.display="none";document.getElementById("formSuccess").style.display="block";}
+        else{alert("Hubo un error. Por favor escribinos por WhatsApp.");btn.disabled=false;btn.textContent="Enviar y activar mi cuenta";}
+      }catch(err2){alert("Error de conexiÃ³n. Escribinos por WhatsApp.");btn.disabled=false;btn.textContent="Enviar y activar mi cuenta";}
+    });
+  })();
+  </script>
+</section>
+
+<!-- GARANTIA -->
+<section class="garantia">
+  <div class="container">
+    <h2>Confianza total desde el primer dÃ­a</h2>
+    <p>GestorRPI funciona con tus propias credenciales del RPI, en tu computadora. Tus datos nunca salen de tu mÃ¡quina.</p>
+    <a href="#precios" class="btn-primary" style="display:inline-block;margin-top:.5rem">Ver planes y suscribirse</a>
+    <div class="g-badges">
+      <div class="g-badge">Pago seguro con MercadoPago</div>
+      <div class="g-badge">Disponible para Mac</div>
+      <div class="g-badge">Disponible para Windows</div>
+      <div class="g-badge">Soporte por WhatsApp</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq-section" id="faq">
+  <div class="container" style="text-align:center">
+    <span class="section-label dark">Preguntas frecuentes</span>
+    <h2 class="display dark reveal" style="margin-top:.5rem">Dudas frecuentes</h2>
+  </div>
+  <div class="faq-list">
+    <details><summary>Â¿Necesito conocimientos tÃ©cnicos?</summary><p>No. GestorRPI estÃ¡ diseÃ±ado para que cualquier profesional pueda usarlo sin saber nada de tecnologÃ­a. Se instala en minutos y funciona desde tu navegador habitual.</p></details>
+    <details><summary>Â¿Es seguro usar mis credenciales del RPI?</summary><p>SÃ­, 100%. La app funciona localmente en tu computadora y tus credenciales del RPI nunca se suben a ningÃºn servidor. Son tuyas y solo las usÃ¡s vos.</p></details>
+    <details><summary>Â¿Funciona en Windows y Mac?</summary><p>SÃ­. La versiÃ³n Mac (Apple Silicon e Intel) y la versiÃ³n Windows ya estÃ¡n disponibles para descargar desde tu cuenta.</p></details>
+    <details><summary>Â¿QuÃ© pasa cuando vence mi suscripciÃ³n?</summary><p>La suscripciÃ³n se renueva automÃ¡ticamente a travÃ©s de MercadoPago. Si querÃ©s cancelar, podÃ©s hacerlo desde tu cuenta de MercadoPago en cualquier momento.</p></details>
+    <details><summary>Â¿Puedo usar GestorRPI en mÃ¡s de una computadora?</summary><p>Cada suscripciÃ³n es para un usuario y una computadora. Si necesitÃ¡s mÃ¡s accesos, contactanos y te armamos un plan multi-usuario a medida.</p></details>
+    <details><summary>Â¿QuÃ© pasa si el portal del RPI cambia?</summary><p>Nos encargamos nosotros. Cuando el portal del RPI hace cambios, actualizamos GestorRPI y recibÃ­s la actualizaciÃ³n sin costo adicional.</p></details>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="logo">Gestor<span>RPI</span></span>
+  <p>AutomatizaciÃ³n de bÃºsquedas en el Registro de la Propiedad Inmueble de la <strong style="color:rgba(255,255,255,.5)">Provincia de Buenos Aires</strong>.</p>
+  <p style="margin-top:.3rem">Â© 2026 GestorRPI Â· Todos los derechos reservados.</p>
+</footer>
+
+<!-- WHATSAPP -->
+<a class="wa-float" href="https://wa.me/5491172373408?text=Hola%2C%20tengo%20una%20consulta%20sobre%20GestorRPI%20%F0%9F%8F%9B%EF%B8%8F" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+  <span class="wa-label">Â¿TenÃ©s dudas? Escribinos</span>
+  <div class="wa-btn">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </div>
+</a>
+
+<!-- TWEAKS PANEL -->
+<div id="tweaks-panel">
+  <h5>Tweaks</h5>
+  <div class="tweak-row">
+    <span class="tweak-label">Color de acento</span>
+    <div class="tweak-swatch-row">
+      <div class="swatch active" style="background:#f59e0b" data-color="#f59e0b" data-dark="#d97706" title="Amber"></div>
+      <div class="swatch" style="background:#3b82f6" data-color="#3b82f6" data-dark="#2563eb" title="Azul"></div>
+      <div class="swatch" style="background:#8b5cf6" data-color="#8b5cf6" data-dark="#7c3aed" title="Violeta"></div>
+      <div class="swatch" style="background:#10b981" data-color="#10b981" data-dark="#059669" title="Verde"></div>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Fondo hero</span>
+    <select id="tweakHero" onchange="applyTweaks()">
+      <option value="var(--black)">Negro puro</option>
+      <option value="#060a12">Azul muy oscuro</option>
+      <option value="#0a0800">MarrÃ³n oscuro</option>
+    </select>
+  </div>
+</div>
+
+<script>
+// ââ NAV SHRINK + BANNER âââââââââââââââââââââââââââââââ
+(function(){
+  var nav=document.getElementById("mainNav");
+  var banner=document.getElementById("topBanner");
+  var prog=document.getElementById("scroll-progress");
+  var docH=0;
+  function onScroll(){
+    var sy=window.scrollY;
+    var scrolled=sy>60;
+    nav.classList.toggle("scrolled",scrolled);
+    nav.style.top=scrolled?"0":"32px";
+    if(banner)banner.style.display=scrolled?"none":"";
+    // scroll progress
+    docH=docH||document.documentElement.scrollHeight-window.innerHeight;
+    if(prog)prog.style.width=Math.min(100,sy/docH*100)+"%";
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+})();
+
+// ââ HAMBURGER âââââââââââââââââââââââââââââââââââââââââ
+function toggleMenu(){document.getElementById("navMobile").classList.toggle("open");}
+
+// ââ SCROLL REVEAL (todas las variantes) âââââââââââââââ
+(function(){
+  var sel=".reveal,.reveal-left,.reveal-right,.reveal-scale";
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add("visible");
+        io.unobserve(e.target);
+        // section sweep en el parent
+        var sec=e.target.closest(".section-sweep");
+        if(sec&&!sec.classList.contains("swept")){
+          setTimeout(function(){sec.classList.add("swept");},200);
+        }
+      }
+    });
+  },{threshold:.08,rootMargin:"0px 0px -40px 0px"});
+  document.querySelectorAll(sel).forEach(function(el){io.observe(el);});
+})();
+
+// ââ ANIMATED COUNTERS ââââââââââââââââââââââââââââââââ
+(function(){
+  function animateCount(el){
+    var target=parseInt(el.getAttribute("data-count"));
+    var duration=1600;var start=null;
+    el.classList.add("num-pop");
+    function step(ts){
+      if(!start)start=ts;
+      var p=Math.min((ts-start)/duration,1);
+      var ease=1-Math.pow(1-p,4);
+      el.textContent=Math.round(ease*target);
+      if(p<1)requestAnimationFrame(step);
+      else el.textContent=target;
+    }
+    requestAnimationFrame(step);
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){animateCount(entry.target);io.unobserve(entry.target);}
+    });
+  },{threshold:.4});
+  document.querySelectorAll("[data-count]").forEach(function(el){io.observe(el);});
+})();
+
+// ââ PARALLAX HERO âââââââââââââââââââââââââââââââââââââ
+(function(){
+  var hero=document.getElementById("hero");
+  var heroLeft=hero&&hero.querySelector(".hero-left");
+  var heroRight=hero&&hero.querySelector(".hero-right");
+  function onScroll(){
+    var y=window.scrollY;
+    if(y>window.innerHeight)return;
+    if(heroLeft)heroLeft.style.transform="translateY("+y*.12+"px)";
+    if(heroRight)heroRight.style.transform="translateY("+y*.06+"px)";
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+})();
+
+// ââ MAGNETIC CARDS ââââââââââââââââââââââââââââââââââââ
+(function(){
+  document.querySelectorAll(".step-card,.testi-card,.plan-card").forEach(function(card){
+    card.classList.add("magnetic");
+    card.addEventListener("mousemove",function(e){
+      var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left-r.width/2)/(r.width/2);
+      var y=(e.clientY-r.top-r.height/2)/(r.height/2);
+      card.style.transform="perspective(600px) rotateY("+x*4+"deg) rotateX("+(-y*4)+"deg) translateY(-4px)";
+    });
+    card.addEventListener("mouseleave",function(){
+      card.style.transform="";
+    });
+  });
+})();
+
+// ââ GLOW SPOTLIGHT ON FEATURE CARDS ââââââââââââââââââ
+(function(){
+  document.querySelectorAll(".feature-card").forEach(function(card){
+    card.addEventListener("mousemove",function(e){
+      var r=card.getBoundingClientRect();
+      card.style.setProperty("--mx",(e.clientX-r.left)+"px");
+      card.style.setProperty("--my",(e.clientY-r.top)+"px");
+    });
+  });
+})();
+
+// ââ FLOATING PARTICLES IN HERO ââââââââââââââââââââââââ
+(function(){
+  var hero=document.getElementById("hero");
+  if(!hero)return;
+  function spawnParticle(){
+    var p=document.createElement("div");
+    p.className="particle";
+    var x=Math.random()*100;
+    var delay=Math.random()*2;
+    var dur=3+Math.random()*4;
+    var dx=(Math.random()-0.5)*80;
+    p.style.cssText="left:"+x+"%;bottom:"+Math.random()*40+"%;"+
+      "--px:"+dx+"px;animation:particleFloat "+dur+"s "+delay+"s ease-out forwards;";
+    hero.appendChild(p);
+    setTimeout(function(){p.remove();},( dur+delay)*1000+200);
+  }
+  setInterval(spawnParticle,600);
+})();
+
+// ââ APP MOCKUP ANIMATION ââââââââââââââââââââââââââââââ
+(function(){
+  var fill=document.getElementById("progressFill");
+  var val=document.getElementById("progressVal");
+  var status=document.getElementById("appStatus");
+  if(!fill)return;
+  var cur=47;var total=50;
+  function tick(){
+    if(cur>=total){
+      cur=0;
+      fill.style.transition="none";
+      fill.style.width="0%";
+      if(val)val.textContent="0 / "+total;
+      setTimeout(function(){fill.style.transition="width 1.4s var(--ease)";},100);
+    }
+    cur++;
+    var pct=Math.round(cur/total*100);
+    fill.style.width=pct+"%";
+    if(val)val.textContent=cur+" / "+total;
+    if(status){
+      if(cur>=total){status.textContent="Completado";status.style.color="#4ade80";}
+      else{status.textContent="Procesando...";status.style.color="";}
+    }
+  }
+  setInterval(tick,1800);
+})();
+
+// ââ TWEAKS ââââââââââââââââââââââââââââââââââââââââââââ
+window.addEventListener("message",function(e){
+  if(e.data&&e.data.type==="__activate_edit_mode")document.getElementById("tweaks-panel").style.display="block";
+  if(e.data&&e.data.type==="__deactivate_edit_mode")document.getElementById("tweaks-panel").style.display="none";
+});
+window.parent.postMessage({type:"__edit_mode_available"},"*");
+
+document.querySelectorAll(".swatch").forEach(function(s){
+  s.addEventListener("click",function(){
+    document.querySelectorAll(".swatch").forEach(function(x){x.classList.remove("active");});
+    s.classList.add("active");
+    var c=s.getAttribute("data-color"),d=s.getAttribute("data-dark");
+    document.documentElement.style.setProperty("--amber",c);
+    document.documentElement.style.setProperty("--amber-d",d);
+    window.parent.postMessage({type:"__edit_mode_set_keys",edits:{accentColor:c}},"*");
+  });
+});
+
+function applyTweaks(){
+  var heroEl=document.getElementById("hero");
+  var v=document.getElementById("tweakHero").value;
+  heroEl.style.background=v;
+}
+</script>
+</body>
+</html>

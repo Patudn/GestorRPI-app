@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P74R6ZSR');</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GestorRPI â Crear cuenta / Iniciar sesiÃ³n</title>
+<meta name="description" content="CreÃ¡ tu cuenta en GestorRPI y empezÃ¡ a automatizar tus bÃºsquedas en el RPI de Buenos Aires."/>
+<meta name="robots" content="noindex, nofollow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#07080f;
+  --dark:#0d0f1a;
+  --dark2:#111525;
+  --dark3:#161c2e;
+  --border:#1e2740;
+  --border2:#252f4a;
+  --text:#e8edf8;
+  --muted:#5a6e94;
+  --muted2:#8a9bbf;
+  --amber:#f59e0b;
+  --amber-d:#d97706;
+  --amber-glow:rgba(245,158,11,0.18);
+  --amber-bg:rgba(245,158,11,0.08);
+  --red:#ef4444;
+  --green:#22c55e;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --font:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+body{
+  font-family:var(--font);
+  background:var(--black);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* Grid background */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:52px 52px;
+  pointer-events:none;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);
+}
+/* Glow */
+body::after{
+  content:'';position:fixed;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(245,158,11,.07) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-60%);
+  pointer-events:none;
+}
+
+.logo{
+  font-size:1.45rem;font-weight:700;letter-spacing:-.03em;
+  color:#fff;text-decoration:none;display:block;
+  text-align:center;margin-bottom:2rem;
+  position:relative;z-index:1;
+}
+.logo span{color:var(--amber);}
+
+.card{
+  background:var(--dark2);
+  border:1px solid var(--border2);
+  border-radius:18px;
+  padding:2.2rem;
+  width:100%;max-width:420px;
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03);
+  position:relative;z-index:1;
+}
+
+/* Plan badge */
+.plan-badge{
+  display:flex;align-items:center;gap:.6rem;
+  background:var(--amber-bg);border:1px solid rgba(245,158,11,.25);
+  border-radius:9px;padding:.7rem 1rem;
+  margin-bottom:1.5rem;
+}
+.plan-badge-icon{
+  width:32px;height:32px;background:rgba(245,158,11,.15);
+  border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.plan-badge-icon svg{width:16px;height:16px;fill:var(--amber);}
+.plan-badge-text{font-size:.8rem;color:var(--muted2);}
+.plan-badge-text strong{display:block;font-size:.88rem;color:var(--amber);font-weight:700;margin-bottom:1px;}
+
+/* Tabs */
+.tabs{
+  display:flex;background:var(--dark3);border:1px solid var(--border);
+  border-radius:10px;padding:4px;margin-bottom:2rem;gap:4px;
+}
+.tab{
+  flex:1;padding:.55rem;text-align:center;
+  font-size:.88rem;font-weight:600;color:var(--muted);
+  border-radius:7px;cursor:pointer;border:none;background:none;
+  transition:all .2s;font-family:var(--font);
+}
+.tab.active{
+  background:var(--amber);color:var(--black);
+  box-shadow:0 2px 12px var(--amber-glow);
+}
+.tab:not(.active):hover{color:var(--text);}
+
+h2{
+  font-size:1.3rem;font-weight:700;color:#fff;
+  letter-spacing:-.04em;margin-bottom:.3rem;
+}
+.subtitle{font-size:.82rem;color:var(--muted);margin-bottom:1.6rem;line-height:1.5;}
+
+/* Form */
+.form-group{margin-bottom:1.1rem;}
+label{
+  display:block;font-size:.78rem;font-weight:700;
+  color:var(--muted2);margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase;
+}
+input[type="email"],input[type="password"]{
+  width:100%;padding:.7rem .95rem;
+  background:var(--dark3);
+  border:1.5px solid var(--border);
+  border-radius:9px;font-size:.92rem;
+  color:#fff;font-family:var(--font);
+  transition:border-color .2s,box-shadow .2s;
+}
+input::placeholder{color:var(--muted);}
+input:focus{
+  outline:none;border-color:var(--amber);
+  box-shadow:0 0 0 3px rgba(245,158,11,.1);
+}
+.hint{font-size:.72rem;color:var(--muted);margin-top:.35rem;}
+
+/* Submit */
+.btn-submit{
+  width:100%;background:var(--amber);color:var(--black);
+  padding:.85rem;border:none;border-radius:10px;
+  font-size:.95rem;font-weight:700;cursor:pointer;
+  margin-top:.4rem;font-family:var(--font);
+  box-shadow:0 4px 20px var(--amber-glow);
+  transition:all .2s;
+}
+.btn-submit:hover:not(:disabled){background:var(--amber-d);transform:translateY(-1px);box-shadow:0 6px 28px rgba(245,158,11,.3);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* Messages */
+.msg{
+  padding:.75rem 1rem;border-radius:9px;
+  font-size:.82rem;font-weight:600;margin-top:.9rem;display:none;
+}
+.msg.error{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2);display:block;}
+.msg.success{background:rgba(34,197,94,.08);color:#86efac;border:1px solid rgba(34,197,94,.2);display:block;}
+.msg.info{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.2);display:block;}
+
+/* Spinner */
+.spinner{
+  display:inline-block;width:14px;height:14px;
+  border:2px solid rgba(0,0,0,.25);border-top-color:var(--black);
+  border-radius:50%;animation:spin .7s linear infinite;
+  vertical-align:middle;margin-right:5px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Secure note */
+.secure-note{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  font-size:.72rem;color:var(--muted);margin-top:1.4rem;
+  padding-top:1.2rem;border-top:1px solid var(--border);
+}
+.secure-note svg{width:12px;height:12px;fill:var(--muted);flex-shrink:0;}
+
+.footer-link{
+  text-align:center;margin-top:1.4rem;font-size:.8rem;color:var(--muted);
+  position:relative;z-index:1;
+}
+.footer-link a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;}
+.footer-link a:hover{color:var(--amber);}
+
+/* WA */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:0;text-decoration:none;}
+.wa-label{background:#fff;color:#128c7e;font-size:.85rem;font-weight:700;padding:.5rem .9rem .5rem 1.1rem;border-radius:50px 0 0 50px;box-shadow:-4px 4px 20px rgba(37,211,102,.15);white-space:nowrap;max-width:0;overflow:hidden;opacity:0;transition:max-width .4s cubic-bezier(.34,1.56,.64,1),opacity .3s,padding .3s;pointer-events:none;}
+.wa-float:hover .wa-label,.wa-float:focus .wa-label{max-width:220px;opacity:1;pointer-events:auto;}
+.wa-btn{width:52px;height:52px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(37,211,102,.4);transition:transform .25s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;}
+.wa-float:hover .wa-btn{transform:scale(1.1);}
+.wa-btn svg{width:26px;height:26px;fill:#fff;}
+@keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5);}70%{box-shadow:0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
+.wa-btn{animation:wa-pulse 2.5s ease-out 2s 3;}
+</style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P74R6ZSR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<a href="index.html" class="logo">Gestor<span>RPI</span></a>
+
+<div class="card" id="card">
+
+  <div class="plan-badge" id="planBadge" style="display:none">
+    <div class="plan-badge-icon">
+      <svg viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm2 0a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm2-1a1 1 0 100 2h.01a1 1 0 100-2H11z" clip-rule="evenodd"/></svg>
+    </div>
+    <div class="plan-badge-text">
+      <strong id="planNombre">â</strong>
+      Plan seleccionado
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabLogin" onclick="switchTab('login')">Iniciar sesiÃ³n</button>
+    <button class="tab" id="tabRegistro" onclick="switchTab('registro')">Crear cuenta</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="formLogin">
+    <h2>Bienvenido de nuevo</h2>
+    <p class="subtitle">IngresÃ¡ con tu cuenta GestorRPI para continuar.</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="ejemplo@mail.com" autocomplete="email"/>
+    </div>
+    <div class="form-group">
+      <label>ContraseÃ±a</label>
+      <input type="password" id="loginPass" placeholder="Tu contraseÃ±a" autocomplete="current-password"/>
+    </div>
+    <button class="btn-submit" id="btnLogin" onclick="doLogin()">Iniciar sesiÃ³n</button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div id="formRegistro" style="display:none">
+    <h2>Crear tu cuenta</h2>
+    <p class="subtitle">Solo necesitÃ¡s email y contraseÃ±a. Menos de 30 segundos.</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="ejemplo@mail.com" autocomplete="email"/>
+    </div>
+    <div class="form-group">
+      <label>ContraseÃ±a</label>
+      <input type="password" id="regPass" placeholder="MÃ­nimo 6 caracteres" autocomplete="new-password"/>
+      <p class="hint">MÃ­nimo 6 caracteres</p>
+    </div>
+    <div class="form-group">
+      <label>Confirmar contraseÃ±a</label>
+      <input type="password" id="regPass2" placeholder="RepetÃ­ la contraseÃ±a" autocomplete="new-password"/>
+    </div>
+    <button class="btn-submit" id="btnRegistro" onclick="doRegistro()">Crear cuenta</button>
+    <div class="msg" id="regMsg"></div>
+  </div>
+
+  <div class="secure-note">
+    <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+    ConexiÃ³n segura Â· Datos protegidos
+  </div>
+</div>
+
+<div class="footer-link">
+  <a href="index.html">â Volver a la pÃ¡gina principal</a>
+</div>
+
+<a class="wa-float" href="https://wa.me/5491172373408?text=Hola%2C%20tengo%20una%20consulta%20sobre%20GestorRPI%20%F0%9F%8F%9B%EF%B8%8F" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <span class="wa-label">Â¿TenÃ©s dudas? Escribinos</span>
+  <div class="wa-btn"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+</a>
+
+<script>
+const FIREBASE_API_KEY = "AIzaSyDF7W4POQmClkEuwEq8NVmmpQaqKB9495Q";
+const BACKEND_URL      = "https://rpi-webhook.onrender.com";
+const params           = new URLSearchParams(window.location.search);
+const planParam        = params.get("plan") || "";
+const PLAN_NOMBRES = {
+  mensual:    "Mensual â $60.000/mes",
+  bimestral:  "Bimestral â $90.000 / 2 meses",
+  trimestral: "Trimestral â $100.000 / 3 meses",
+};
+if(planParam && PLAN_NOMBRES[planParam]){
+  document.getElementById("planBadge").style.display="flex";
+  document.getElementById("planNombre").textContent=PLAN_NOMBRES[planParam];
+}
+
+function switchTab(tab){
+  var isLogin=tab==="login";
+  document.getElementById("formLogin").style.display=isLogin?"block":"none";
+  document.getElementById("formRegistro").style.display=isLogin?"none":"block";
+  document.getElementById("tabLogin").classList.toggle("active",isLogin);
+  document.getElementById("tabRegistro").classList.toggle("active",!isLogin);
+}
+
+function setMsg(id,text,type){var el=document.getElementById(id);el.textContent=text;el.className="msg "+type;}
+
+function setLoading(btnId,loading,txt){
+  var btn=document.getElementById(btnId);
+  btn.disabled=loading;
+  btn.innerHTML=loading?'<span class="spinner"></span>Un momento...':txt;
+}
+
+function saveSession(data){
+  localStorage.setItem("grpi_session",JSON.stringify({
+    idToken:data.idToken,refreshToken:data.refreshToken,
+    email:data.email,uid:data.localId,
+    expiresAt:Date.now()+parseInt(data.expiresIn||3600)*1000,
+  }));
+}
+
+async function doLogin(){
+  var email=document.getElementById("loginEmail").value.trim();
+  var pass=document.getElementById("loginPass").value;
+  if(!email||!pass){setMsg("loginMsg","CompletÃ¡ email y contraseÃ±a.","error");return;}
+  setLoading("btnLogin",true,"Iniciar sesiÃ³n");setMsg("loginMsg","","");
+  try{
+    var r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="+FIREBASE_API_KEY,
+      {method:"POST",headers:{"Content-Type":"application/json"},
+       body:JSON.stringify({email,password:pass,returnSecureToken:true})});
+    var d=await r.json();
+    if(d.idToken){saveSession(d);await postLoginFlow(d.localId,d.idToken);}
+    else{
+      var msgs={"INVALID_LOGIN_CREDENTIALS":"Email o contraseÃ±a incorrectos.","EMAIL_NOT_FOUND":"No existe cuenta con ese email.","INVALID_PASSWORD":"ContraseÃ±a incorrecta.","USER_DISABLED":"Cuenta deshabilitada. Contactanos.","TOO_MANY_ATTEMPTS_TRY_LATER":"Demasiados intentos. EsperÃ¡ unos minutos."};
+      setMsg("loginMsg",msgs[d.error?.message]||"Error desconocido.","error");
+    }
+  }catch(e){setMsg("loginMsg","Error de conexiÃ³n. VerificÃ¡ tu internet.","error");}
+  finally{setLoading("btnLogin",false,"Iniciar sesiÃ³n");}
+}
+
+async function doRegistro(){
+  var email=document.getElementById("regEmail").value.trim();
+  var pass=document.getElementById("regPass").value;
+  var pass2=document.getElementById("regPass2").value;
+  if(!email||!pass){setMsg("regMsg","CompletÃ¡ todos los campos.","error");return;}
+  if(pass!==pass2){setMsg("regMsg","Las contraseÃ±as no coinciden.","error");return;}
+  if(pass.length<6){setMsg("regMsg","La contraseÃ±a debe tener al menos 6 caracteres.","error");return;}
+  setLoading("btnRegistro",true,"Crear cuenta");setMsg("regMsg","","");
+  try{
+    var r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="+FIREBASE_API_KEY,
+      {method:"POST",headers:{"Content-Type":"application/json"},
+       body:JSON.stringify({email,password:pass,returnSecureToken:true})});
+    var d=await r.json();
+    if(d.idToken){saveSession(d);setMsg("regMsg","Cuenta creada. Redirigiendo...","success");await postLoginFlow(d.localId,d.idToken);}
+    else{
+      var msgs={"EMAIL_EXISTS":"Ya existe una cuenta con ese email. UsÃ¡ el login.","WEAK_PASSWORD":"ContraseÃ±a demasiado dÃ©bil.","INVALID_EMAIL":"Email con formato invÃ¡lido."};
+      setMsg("regMsg",msgs[d.error?.message]||"Error desconocido.","error");
+    }
+  }catch(e){setMsg("regMsg","Error de conexiÃ³n. VerificÃ¡ tu internet.","error");}
+  finally{setLoading("btnRegistro",false,"Crear cuenta");}
+}
+
+async function postLoginFlow(uid,idToken){
+  if(planParam&&["mensual","bimestral","trimestral"].includes(planParam)){
+    var msgId=document.getElementById("formLogin").style.display!=="none"?"loginMsg":"regMsg";
+    setMsg(msgId,"Generando tu link de pago...","info");
+    try{
+      var resp=await fetch(BACKEND_URL+"/crear_suscripcion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({uid,plan:planParam,back_url:window.location.origin+"/download.html"})});
+      var result=await resp.json();
+      if(result.init_point){window.location.href=result.init_point;}
+      else{setMsg(msgId,"Error al generar el link de pago. IntentÃ¡ de nuevo.","error");}
+    }catch(e){setMsg(msgId,"Error de conexiÃ³n con el servidor.","error");}
+  }else{
+    window.location.href="download.html";
+  }
+}
+
+(function checkExistingSession(){
+  var raw=localStorage.getItem("grpi_session");
+  if(!raw)return;
+  try{
+    var s=JSON.parse(raw);
+    if(s.idToken&&s.expiresAt>Date.now()){
+      if(planParam&&["mensual","bimestral","trimestral"].includes(planParam)){postLoginFlow(s.uid,s.idToken);}
+      else{window.location.href="download.html";}
+    }
+  }catch(e){}
+})();
+
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Enter")return;
+  if(document.getElementById("formLogin").style.display!=="none")doLogin();else doRegistro();
+});
+</script>
+</body>
+</html>
